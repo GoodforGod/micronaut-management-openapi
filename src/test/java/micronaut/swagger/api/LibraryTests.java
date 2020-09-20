@@ -1,4 +1,4 @@
-package micronaut.library.template;
+package micronaut.swagger.api;
 
 /**
  * @author GoodforGod
