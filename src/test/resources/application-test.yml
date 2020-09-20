@@ -4,9 +4,10 @@ micronaut:
 
 swagger:
   enabled: true
-  merge-files: true
-  exclude-files:
+  merge: true
   path: /api
+  exclude:
+    - default.yml
   ui:
-    path: /api/ui
     enalbed: true
+    path: /api/ui

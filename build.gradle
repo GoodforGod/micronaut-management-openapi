@@ -43,11 +43,15 @@ configurations {
 dependencies {
     micronautBom enforcedPlatform('io.micronaut:micronaut-bom:2.0.2')
 
+    annotationProcessor 'io.micronaut.configuration:micronaut-openapi'
     annotationProcessor 'io.micronaut:micronaut-inject-java'
 
-    testAnnotationProcessor 'io.micronaut:micronaut-inject-java'
+    compileOnly 'io.swagger.core.v3:swagger-annotations'
 
+    implementation 'org.jetbrains:annotations:19.0.0'
     implementation 'io.micronaut:micronaut-http-server-netty'
+
+    testAnnotationProcessor 'io.micronaut:micronaut-inject-java'
 
     testCompile 'io.micronaut.test:micronaut-test-core'
     testCompile 'io.micronaut.test:micronaut-test-junit5'
