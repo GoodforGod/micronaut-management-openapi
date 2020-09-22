@@ -57,12 +57,12 @@ public class SwaggerLoader {
     }
 
     public Maybe<Swagger> getMergedSwagger() {
-        if(merged != null)
+        if (merged != null)
             return Maybe.just(merged);
 
         final Collection<Swagger> swaggers = getSwaggersCollection();
         final Map<Object, Object> mergedYaml = yamlMerger.merge(swaggers);
-        if(CollectionUtils.isEmpty(mergedYaml))
+        if (CollectionUtils.isEmpty(mergedYaml))
             return Maybe.empty();
 
         try (final Writer writer = new BufferedWriter(new FileWriter(SWAGGER_MERGED))) {
@@ -75,7 +75,7 @@ public class SwaggerLoader {
     }
 
     public Flowable<Swagger> getSwaggers() {
-       return Flowable.fromIterable(getSwaggersCollection());
+        return Flowable.fromIterable(getSwaggersCollection());
     }
 
     private Collection<Swagger> getSwaggersCollection() {

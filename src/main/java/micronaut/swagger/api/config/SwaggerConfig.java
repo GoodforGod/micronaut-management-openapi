@@ -19,8 +19,8 @@ public class SwaggerConfig {
 
     public class SwaggerUIConfig {
 
-        private String path;
-        private boolean enabled;
+        private String path = "/swagger/ui";
+        private boolean enabled = true;
 
         public String getPath() {
             return path;
@@ -39,9 +39,9 @@ public class SwaggerConfig {
         }
     }
 
-    private boolean enabled;
-    private boolean merge;
-    private String path;
+    private boolean enabled = true;
+    private boolean merge = true;
+    private String path = "/swagger";
     private List<String> exclude;
 
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "ui")

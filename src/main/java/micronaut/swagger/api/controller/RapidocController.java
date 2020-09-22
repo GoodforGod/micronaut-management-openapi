@@ -9,13 +9,15 @@ import io.swagger.v3.oas.annotations.Hidden;
 import micronaut.swagger.api.SwaggerSettings;
 
 /**
+ * Description in progress
+ *
  * @author Anton Kurako (GoodforGod)
- * @since 20.9.2020
+ * @since 22.9.2020
  */
 @Hidden
-@Requires(property = SwaggerSettings.PREFIX + ".ui.enabled", value = "true", defaultValue = "true")
-@Controller("${swagger.ui.path:/swagger/ui}")
-public class SwaggerUIController {
+@Requires(property = SwaggerSettings.PREFIX + ".rapidoc.enabled", value = "true", defaultValue = "false")
+@Controller("${swagger.rapidoc.path:/rapidoc}")
+public class RapidocController {
 
     @Get(produces = MediaType.TEXT_HTML)
     public Maybe<String> getSwagger() {

@@ -1,7 +1,6 @@
 package micronaut.swagger.api.model;
 
 import java.net.URI;
-import java.nio.file.attribute.FileTime;
 import java.util.Objects;
 
 /**
@@ -30,8 +29,10 @@ public class Swagger {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         Swagger swagger = (Swagger) o;
         return Objects.equals(uri, swagger.uri);
     }

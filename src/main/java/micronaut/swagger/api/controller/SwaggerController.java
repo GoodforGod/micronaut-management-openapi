@@ -6,19 +6,18 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.server.types.files.StreamedFile;
 import io.reactivex.Maybe;
-import io.reactivex.Single;
+import io.swagger.v3.oas.annotations.Hidden;
 import micronaut.swagger.api.SwaggerSettings;
-import micronaut.swagger.api.config.SwaggerConfig;
 import micronaut.swagger.api.service.SwaggerLoader;
 
 import javax.inject.Inject;
 import java.io.InputStream;
-import java.util.Optional;
 
 /**
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
  */
+@Hidden
 @Requires(property = SwaggerSettings.PREFIX + ".enabled", value = "true", defaultValue = "true")
 @Controller("${swagger.path:/swagger}")
 public class SwaggerController {
