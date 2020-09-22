@@ -1,5 +1,6 @@
 package micronaut.swagger.api.model;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.util.Objects;
 
@@ -11,8 +12,10 @@ import java.util.Objects;
  */
 public class Swagger {
 
+    private boolean merged = false;
     private final URI uri;
     private final long created;
+    private InputStream stream;
 
     public Swagger(URI uri, long created) {
         this.uri = uri;
@@ -25,6 +28,24 @@ public class Swagger {
 
     public long getCreated() {
         return created;
+    }
+
+    public InputStream getStream() {
+        return stream;
+    }
+
+    public Swagger withStream(InputStream stream) {
+        this.stream = stream;
+        return this;
+    }
+
+    public boolean isMerged() {
+        return merged;
+    }
+
+    public Swagger asMerged() {
+        this.merged = true;
+        return this;
     }
 
     @Override

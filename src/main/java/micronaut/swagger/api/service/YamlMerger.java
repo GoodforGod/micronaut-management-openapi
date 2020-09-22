@@ -7,6 +7,7 @@ import micronaut.swagger.api.model.Swagger;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.inject.Singleton;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -33,7 +34,18 @@ public class YamlMerger {
     }
 
     private Map<Object, Object> swaggerAsMap(Swagger swagger) {
-        return new Yaml().load(getClass().getResourceAsStream(swagger.getUri().getPath()));
+        InputStream stream = getClass().getResourceAsStream(swagger.getUri().getPath());
+        if(stream == null) {
+            final String path = swagger.getUri().getPath();
+            final int indexOf = path.lastIndexOf("META-INF");
+            final String localPath = path.substring(indexOf);
+            stream = getClass().getResourceAsStream("/" + localPath);
+        }
+
+        if(stream == null)
+            throw new IllegalArgumentException("Swagger can not be loaded as resource from path:" + swagger.getUri());
+
+        return new Yaml().load(stream);
     }
 
     @SuppressWarnings("unchecked")

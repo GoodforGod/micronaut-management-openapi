@@ -71,8 +71,11 @@ public class SwaggerLoader {
 
         try (final Writer writer = new BufferedWriter(new FileWriter(SWAGGER_MERGED))) {
             new Yaml().dump(mergedYaml, writer);
-            this.merged = new Swagger(new File(SWAGGER_MERGED).toURI(), Instant.now().getEpochSecond());
+            this.merged = new Swagger(new URI(SWAGGER_MERGED), Instant.now().getEpochSecond()).asMerged();
             return Maybe.just(merged);
+        } catch (IOException e) {
+            //TODO handle when can't write have to dump to inputstream directly
+            throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }

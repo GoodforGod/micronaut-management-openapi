@@ -4,13 +4,17 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
+import io.micronaut.http.server.types.files.FileCustomizableResponseType;
 import io.micronaut.http.server.types.files.StreamedFile;
+import io.micronaut.http.server.types.files.SystemFile;
 import io.reactivex.Maybe;
 import io.swagger.v3.oas.annotations.Hidden;
 import micronaut.swagger.api.SwaggerSettings;
 import micronaut.swagger.api.service.SwaggerLoader;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -30,10 +34,13 @@ public class SwaggerController {
     }
 
     @Get(produces = MediaType.APPLICATION_YAML)
-    public Maybe<StreamedFile> getSwagger() {
+    public Maybe<FileCustomizableResponseType> getSwagger() {
         return loader.getSwagger().map(s -> {
             final InputStream stream = getClass().getResourceAsStream(s.getUri().getPath());
-            return new StreamedFile(stream, MediaType.APPLICATION_YAML_TYPE);
+            if(stream != null)
+                return new StreamedFile(stream, MediaType.APPLICATION_YAML_TYPE);
+
+            return new SystemFile(new File(s.getUri().getPath()), MediaType.APPLICATION_YAML_TYPE);
         });
     }
 }
