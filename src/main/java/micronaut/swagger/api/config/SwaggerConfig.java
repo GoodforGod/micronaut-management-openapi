@@ -8,6 +8,8 @@ import micronaut.swagger.api.SwaggerSettings;
 import java.util.List;
 
 /**
+ * Configuration for swagger library
+ *
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
  */

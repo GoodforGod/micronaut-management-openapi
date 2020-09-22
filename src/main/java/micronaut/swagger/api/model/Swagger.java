@@ -5,7 +5,7 @@ import java.nio.file.attribute.FileTime;
 import java.util.Objects;
 
 /**
- * Description in progress
+ * Model for representing swagger file
  *
  * @author Anton Kurako (GoodforGod)
  * @since 21.9.2020

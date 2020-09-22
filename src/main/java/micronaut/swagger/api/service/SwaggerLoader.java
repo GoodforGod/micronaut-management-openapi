@@ -2,6 +2,8 @@ package micronaut.swagger.api.service;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.CollectionUtils;
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
 import micronaut.swagger.api.config.SwaggerConfig;
 import micronaut.swagger.api.model.Swagger;
 import org.yaml.snakeyaml.Yaml;
@@ -18,7 +20,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Description in progress
+ * Swagger loader service
  *
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
@@ -33,36 +35,50 @@ public class SwaggerLoader {
     private Collection<Swagger> cachedSwaggers = null;
     private Swagger merged = null;
 
+    private final SwaggerConfig config;
     private final YamlMerger yamlMerger;
 
     @Inject
-    public SwaggerLoader(YamlMerger yamlMerger) {
+    public SwaggerLoader(SwaggerConfig config, YamlMerger yamlMerger) {
+        this.config = config;
         this.yamlMerger = yamlMerger;
     }
 
-    public Optional<Swagger> getServiceSwagger() {
-        return getSwaggers().stream().min(Comparator.comparingLong(Swagger::getCreated));
+    public Maybe<Swagger> getSwagger() {
+        return config.isMerge()
+                ? getMergedSwagger()
+                : getServiceSwagger();
     }
 
-    public Optional<Swagger> getMergedSwagger() {
-        if(merged != null)
-            return Optional.of(merged);
+    public Maybe<Swagger> getServiceSwagger() {
+        return getSwaggersCollection().stream().max(Comparator.comparingLong(Swagger::getCreated))
+                .map(Maybe::just)
+                .orElse(Maybe.empty());
+    }
 
-        final Collection<Swagger> swaggers = getSwaggers();
+    public Maybe<Swagger> getMergedSwagger() {
+        if(merged != null)
+            return Maybe.just(merged);
+
+        final Collection<Swagger> swaggers = getSwaggersCollection();
         final Map<Object, Object> mergedYaml = yamlMerger.merge(swaggers);
         if(CollectionUtils.isEmpty(mergedYaml))
-            return Optional.empty();
+            return Maybe.empty();
 
         try (final Writer writer = new BufferedWriter(new FileWriter(SWAGGER_MERGED))) {
             new Yaml().dump(mergedYaml, writer);
             this.merged = new Swagger(new File(SWAGGER_MERGED).toURI(), Instant.now().getEpochSecond());
-            return Optional.of(merged);
+            return Maybe.just(merged);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
-    public Collection<Swagger> getSwaggers() {
+    public Flowable<Swagger> getSwaggers() {
+       return Flowable.fromIterable(getSwaggersCollection());
+    }
+
+    private Collection<Swagger> getSwaggersCollection() {
         if (cachedSwaggers != null)
             return cachedSwaggers;
 

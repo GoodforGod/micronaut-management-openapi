@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Description in progress
+ * Yaml file merged
  *
  * @author Anton Kurako (GoodforGod)
  * @since 21.9.2020
