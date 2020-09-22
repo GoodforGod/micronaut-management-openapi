@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.stream.Collectors;
 
 /**
  * Swagger loader service
@@ -61,6 +62,9 @@ public class SwaggerLoader {
             return Maybe.just(merged);
 
         final Collection<Swagger> swaggers = getSwaggersCollection();
+        if (CollectionUtils.isEmpty(swaggers))
+            return Maybe.empty();
+
         final Map<Object, Object> mergedYaml = yamlMerger.merge(swaggers);
         if (CollectionUtils.isEmpty(mergedYaml))
             return Maybe.empty();
@@ -96,7 +100,13 @@ public class SwaggerLoader {
             this.cachedSwaggers = swaggers;
             return swaggers;
         } catch (IOException | URISyntaxException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            final File[] files = new File(getClass().getResource("/" + SWAGGER_DIR).getPath()).listFiles();
+            if (files == null)
+                return Collections.emptyList();
+
+            return Arrays.stream(files)
+                    .map(f -> new Swagger(f.toURI(), f.lastModified()))
+                    .collect(Collectors.toList());
         }
     }
 }

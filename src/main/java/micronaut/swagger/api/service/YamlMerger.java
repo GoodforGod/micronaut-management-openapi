@@ -7,10 +7,7 @@ import micronaut.swagger.api.model.Swagger;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.inject.Singleton;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Yaml file merged
@@ -23,6 +20,9 @@ import java.util.Map;
 public class YamlMerger {
 
     public Map<Object, Object> merge(Collection<Swagger> swaggers) {
+        if (CollectionUtils.isEmpty(swaggers))
+            return Collections.emptyMap();
+
         final Map<Object, Object> result = new LinkedHashMap<>();
 
         swaggers.stream()
