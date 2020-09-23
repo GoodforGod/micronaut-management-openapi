@@ -19,8 +19,30 @@ public class SwaggerConfig {
 
     public class SwaggerUIConfig {
 
-        private String path = "/swagger/ui";
+        private String path = SwaggerSettings.DEFAULT_SWAGGER_UI_URL;
         private boolean enabled = true;
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+    }
+
+    public class RapidocConfig {
+
+        private String path = SwaggerSettings.DEFAULT_RAPIDOC_URL;
+        private boolean enabled = false;
 
         public String getPath() {
             return path;
@@ -41,11 +63,14 @@ public class SwaggerConfig {
 
     private boolean enabled = true;
     private boolean merge = true;
-    private String path = "/swagger";
+    private String path = SwaggerSettings.DEFAULT_SWAGGER_URL;
     private List<String> exclude;
 
     @ConfigurationBuilder(prefixes = "set", configurationPrefix = "ui")
     private final SwaggerUIConfig uiConfig = new SwaggerUIConfig();
+
+    @ConfigurationBuilder(prefixes = "set", configurationPrefix = "rapidoc")
+    private final RapidocConfig rapidocConfig = new RapidocConfig();
 
     public boolean isEnabled() {
         return enabled;
@@ -83,14 +108,7 @@ public class SwaggerConfig {
         return uiConfig;
     }
 
-    @Override
-    public String toString() {
-        return "SwaggerConfig{" +
-                "enabled=" + enabled +
-                ", merge=" + merge +
-                ", path='" + path + '\'' +
-                ", exclude=" + exclude +
-                ", uiConfig=" + uiConfig +
-                '}';
+    public RapidocConfig getRapidocConfig() {
+        return rapidocConfig;
     }
 }

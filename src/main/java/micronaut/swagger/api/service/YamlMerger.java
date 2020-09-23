@@ -4,6 +4,8 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.CollectionUtils;
 import micronaut.swagger.api.config.SwaggerConfig;
 import micronaut.swagger.api.model.Swagger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.inject.Singleton;
@@ -20,6 +22,8 @@ import java.util.*;
 @Singleton
 public class YamlMerger {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     public Map<Object, Object> merge(Collection<Swagger> swaggers) {
         if (CollectionUtils.isEmpty(swaggers))
             return Collections.emptyMap();
@@ -34,15 +38,17 @@ public class YamlMerger {
     }
 
     private Map<Object, Object> swaggerAsMap(Swagger swagger) {
-        InputStream stream = getClass().getResourceAsStream(swagger.getUri().getPath());
-        if(stream == null) {
-            final String path = swagger.getUri().getPath();
-            final int indexOf = path.lastIndexOf("META-INF");
-            final String localPath = path.substring(indexOf);
+        final String path = swagger.getUri().getPath();
+        InputStream stream = getClass().getResourceAsStream(path);
+        if (stream == null) {
+            logger.debug("Reading as stream swagger at path: {}", path);
+            final int metaIndex = path.lastIndexOf("META-INF");
+            final int index = metaIndex == -1 ? 0 : metaIndex;
+            final String localPath = path.substring(index);
             stream = getClass().getResourceAsStream("/" + localPath);
         }
 
-        if(stream == null)
+        if (stream == null)
             throw new IllegalArgumentException("Swagger can not be loaded as resource from path:" + swagger.getUri());
 
         return new Yaml().load(stream);

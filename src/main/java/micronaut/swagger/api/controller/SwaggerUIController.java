@@ -15,7 +15,7 @@ import micronaut.swagger.api.SwaggerSettings;
  */
 @Hidden
 @Requires(property = SwaggerSettings.PREFIX + ".ui.enabled", value = "true", defaultValue = "true")
-@Controller("${swagger.ui.path:/swagger/ui}")
+@Controller("${swagger.ui.path:" + SwaggerSettings.DEFAULT_SWAGGER_UI_URL + "}")
 public class SwaggerUIController extends FileController {
 
     @Get(produces = MediaType.TEXT_HTML)

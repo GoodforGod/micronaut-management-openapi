@@ -43,7 +43,6 @@ configurations {
 dependencies {
     micronautBom enforcedPlatform('io.micronaut:micronaut-bom:2.0.2')
 
-    annotationProcessor 'io.micronaut.configuration:micronaut-openapi'
     annotationProcessor 'io.micronaut:micronaut-inject-java'
 
     compileOnly 'io.swagger.core.v3:swagger-annotations'

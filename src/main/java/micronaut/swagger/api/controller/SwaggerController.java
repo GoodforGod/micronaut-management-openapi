@@ -11,10 +11,11 @@ import io.reactivex.Maybe;
 import io.swagger.v3.oas.annotations.Hidden;
 import micronaut.swagger.api.SwaggerSettings;
 import micronaut.swagger.api.service.SwaggerLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -23,9 +24,10 @@ import java.io.InputStream;
  */
 @Hidden
 @Requires(property = SwaggerSettings.PREFIX + ".enabled", value = "true", defaultValue = "true")
-@Controller("${swagger.path:/swagger}")
+@Controller("${swagger.path:" + SwaggerSettings.DEFAULT_SWAGGER_URL + "}")
 public class SwaggerController {
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final SwaggerLoader loader;
 
     @Inject
@@ -37,9 +39,12 @@ public class SwaggerController {
     public Maybe<FileCustomizableResponseType> getSwagger() {
         return loader.getSwagger().map(s -> {
             final InputStream stream = getClass().getResourceAsStream(s.getUri().getPath());
-            if(stream != null)
+            if (stream != null) {
+                logger.debug("Streaming swagger in path: {}", s.getUri().getPath());
                 return new StreamedFile(stream, MediaType.APPLICATION_YAML_TYPE);
+            }
 
+            logger.debug("System swagger in path: {}", s.getUri().getPath());
             return new SystemFile(new File(s.getUri().getPath()), MediaType.APPLICATION_YAML_TYPE);
         });
     }

@@ -10,14 +10,12 @@ import io.swagger.v3.oas.annotations.Hidden;
 import micronaut.swagger.api.SwaggerSettings;
 
 /**
- * Description in progress
- *
  * @author Anton Kurako (GoodforGod)
  * @since 22.9.2020
  */
 @Hidden
 @Requires(property = SwaggerSettings.PREFIX + ".rapidoc.enabled", value = "true", defaultValue = "false")
-@Controller("${swagger.rapidoc.path:/rapidoc}")
+@Controller("${swagger.rapidoc.path:" + SwaggerSettings.DEFAULT_RAPIDOC_URL + "}")
 public class RapidocController extends FileController {
 
     @Get(produces = MediaType.TEXT_HTML)
