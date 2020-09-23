@@ -3,7 +3,7 @@ package micronaut.swagger.api.service;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.CollectionUtils;
 import micronaut.swagger.api.config.SwaggerConfig;
-import micronaut.swagger.api.model.Swagger;
+import micronaut.swagger.api.model.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -24,21 +24,21 @@ public class YamlMerger {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public Map<Object, Object> merge(Collection<Swagger> swaggers) {
-        if (CollectionUtils.isEmpty(swaggers))
+    public Map<Object, Object> merge(Collection<Resource> resources) {
+        if (CollectionUtils.isEmpty(resources))
             return Collections.emptyMap();
 
         final Map<Object, Object> result = new LinkedHashMap<>();
 
-        swaggers.stream()
+        resources.stream()
                 .map(this::swaggerAsMap)
                 .forEach(yaml -> merge(result, yaml));
 
         return result;
     }
 
-    private Map<Object, Object> swaggerAsMap(Swagger swagger) {
-        final String path = swagger.getUri().getPath();
+    private Map<Object, Object> swaggerAsMap(Resource resource) {
+        final String path = resource.getUri().getPath();
         InputStream stream = getClass().getResourceAsStream(path);
         if (stream == null) {
             logger.debug("Reading as stream swagger at path: {}", path);
@@ -49,7 +49,7 @@ public class YamlMerger {
         }
 
         if (stream == null)
-            throw new IllegalArgumentException("Swagger can not be loaded as resource from path:" + swagger.getUri());
+            throw new IllegalArgumentException("Swagger can not be loaded as resource from path:" + resource.getUri());
 
         return new Yaml().load(stream);
     }

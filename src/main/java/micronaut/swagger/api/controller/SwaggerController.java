@@ -38,7 +38,7 @@ public class SwaggerController {
     @Get(produces = MediaType.APPLICATION_YAML)
     public Maybe<FileCustomizableResponseType> getSwagger() {
         return loader.getSwagger().map(s -> {
-            final InputStream stream = getClass().getResourceAsStream(s.getUri().getPath());
+            final InputStream stream = s.getInputStream();
             if (stream != null) {
                 logger.debug("Streaming swagger in path: {}", s.getUri().getPath());
                 return new StreamedFile(stream, MediaType.APPLICATION_YAML_TYPE);

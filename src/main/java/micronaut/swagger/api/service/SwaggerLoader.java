@@ -1,12 +1,12 @@
 package micronaut.swagger.api.service;
 
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.CollectionUtils;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import micronaut.swagger.api.config.SwaggerConfig;
-import micronaut.swagger.api.model.Swagger;
+import micronaut.swagger.api.model.Resource;
+import micronaut.swagger.api.utils.ResourceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -15,15 +15,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 /**
  * Swagger loader service
@@ -40,8 +33,8 @@ public class SwaggerLoader {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Collection<Swagger> cachedSwaggers = null;
-    private Swagger merged = null;
+    private Collection<Resource> cachedResources = null;
+    private Resource merged = null;
 
     private final SwaggerConfig config;
     private final YamlMerger yamlMerger;
@@ -52,34 +45,35 @@ public class SwaggerLoader {
         this.yamlMerger = yamlMerger;
     }
 
-    public Maybe<Swagger> getSwagger() {
+    public Maybe<Resource> getSwagger() {
         return config.isMerge()
                 ? getMergedSwagger()
                 : getServiceSwagger();
     }
 
-    public Maybe<Swagger> getServiceSwagger() {
-        return getSwaggersCollection().stream().max(Comparator.comparingLong(Swagger::getCreated))
+    public Maybe<Resource> getServiceSwagger() {
+        return getSwaggersResources().stream().max(Comparator.comparingLong(Resource::getCreated))
                 .map(Maybe::just)
                 .orElse(Maybe.empty());
     }
 
-    public Maybe<Swagger> getMergedSwagger() {
+    public Maybe<Resource> getMergedSwagger() {
         if (merged != null)
             return Maybe.just(merged);
 
-        final Collection<Swagger> swaggers = getSwaggersCollection();
-        if (CollectionUtils.isEmpty(swaggers)) {
+        final Collection<Resource> resources = getSwaggersResources();
+        if (CollectionUtils.isEmpty(resources)) {
             logger.debug("No swagger files found for merging");
             return Maybe.empty();
         }
 
-        if(swaggers.size() == 1) {
+        if (resources.size() == 1) {
             logger.debug("Found 1 swagger file, merge is not required");
-            return Maybe.just(swaggers.iterator().next());
+            final Resource resource = resources.iterator().next();
+            return Maybe.just(resource);
         }
 
-        final Map<Object, Object> mergedYaml = yamlMerger.merge(swaggers);
+        final Map<Object, Object> mergedYaml = yamlMerger.merge(resources);
         if (CollectionUtils.isEmpty(mergedYaml)) {
             logger.debug("Merged swagger file is empty");
             return Maybe.empty();
@@ -87,7 +81,7 @@ public class SwaggerLoader {
 
         try (final Writer writer = new BufferedWriter(new FileWriter(SWAGGER_MERGED))) {
             new Yaml().dump(mergedYaml, writer);
-            this.merged = new Swagger(new URI(SWAGGER_MERGED), Instant.now().getEpochSecond()).asMerged();
+            this.merged = new Resource(new URI(SWAGGER_MERGED), Instant.now().getEpochSecond());
             logger.debug("Merged swagger file written to: {}", SWAGGER_MERGED);
             return Maybe.just(merged);
         } catch (IOException e) {
@@ -98,60 +92,15 @@ public class SwaggerLoader {
         }
     }
 
-    public Flowable<Swagger> getSwaggers() {
-        return Flowable.fromIterable(getSwaggersCollection());
+    public Flowable<Resource> getSwaggers() {
+        return Flowable.fromIterable(getSwaggersResources());
     }
 
-    private Collection<Swagger> getSwaggersCollection() {
-        if (cachedSwaggers != null)
-            return cachedSwaggers;
+    private Collection<Resource> getSwaggersResources() {
+        if (cachedResources != null)
+            return cachedResources;
 
-        logger.debug("Looking for swaggers inside JAR in path: {}", SWAGGER_DIR);
-        try {
-            final URL url = getClass().getClassLoader().getResource(SWAGGER_DIR);
-            if(url == null)
-                throw new URISyntaxException("null", "URL is nullable");
-
-            final String jarPath = url.getPath()
-                    .replaceFirst("[.]jar[!].*", ".jar")
-                    .replaceFirst("file:", "")
-                    .replace(" ", "\\ ");
-
-            logger.debug("Opening JAR in path: {}", jarPath);
-            try (final JarFile jarFile = new JarFile(jarPath)) {
-                final Enumeration<JarEntry> entries = jarFile.entries();
-                final List<Swagger> swaggers = new ArrayList<>();
-
-                while (entries.hasMoreElements()) {
-                    final JarEntry entry = entries.nextElement();
-                    if (entry.getName().endsWith(".yml") || entry.getName().endsWith(".yaml")) {
-                        final URI uri = new URI(entry.getName());
-                        final FileTime creationTime = (entry.getCreationTime() == null)
-                                ? entry.getLastModifiedTime()
-                                : entry.getCreationTime();
-
-                        logger.debug("Found swagger at path '{}' with creation time '{}'", uri, creationTime);
-                        swaggers.add(new Swagger(uri, creationTime.to(TimeUnit.SECONDS)));
-                    }
-                }
-
-                logger.debug("Found '{}' swaggers inside JAR", swaggers.size());
-                this.cachedSwaggers = swaggers;
-                return swaggers;
-            }
-        } catch (IOException | URISyntaxException e) {
-            final String path = "/" + SWAGGER_DIR;
-            logger.debug("Can not open JAR file, looking for swaggers outside JAR in path: {}", path);
-            final File[] files = new File(getClass().getResource(path).getPath()).listFiles();
-            if (ArrayUtils.isEmpty(files)) {
-                logger.debug("No swaggers found outside JAR in path: {}", path);
-                return Collections.emptyList();
-            }
-
-            logger.debug("Found '{}' swaggers outside JAR in path: {}", files.length, path);
-            return Arrays.stream(files)
-                    .map(f -> new Swagger(f.toURI(), f.lastModified()))
-                    .collect(Collectors.toList());
-        }
+        this.cachedResources = ResourceUtils.getResources(SWAGGER_DIR, p -> p.endsWith(".yml") || p.endsWith(".yaml"));
+        return cachedResources;
     }
 }

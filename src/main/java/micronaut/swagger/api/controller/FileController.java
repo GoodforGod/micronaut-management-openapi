@@ -16,7 +16,7 @@ import java.util.Optional;
  */
 public abstract class FileController {
 
-protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     protected Maybe<StreamedFile> getFile(String path, MediaType type) {
         return Maybe.fromCallable(() -> Optional.ofNullable(getClass().getResourceAsStream(path)))
