@@ -45,18 +45,27 @@ public class SwaggerLoader {
         this.yamlMerger = yamlMerger;
     }
 
+    /**
+     * @return swagger resource as specified per configuration
+     */
     public Maybe<Resource> getSwagger() {
         return config.isMerge()
                 ? getMergedSwagger()
                 : getServiceSwagger();
     }
 
+    /**
+     * @return current service resource
+     */
     public Maybe<Resource> getServiceSwagger() {
         return getSwaggersResources().stream().max(Comparator.comparingLong(Resource::getCreated))
                 .map(Maybe::just)
                 .orElse(Maybe.empty());
     }
 
+    /**
+     * @return merged swagger in there are any to merge
+     */
     public Maybe<Resource> getMergedSwagger() {
         if (merged != null)
             return Maybe.just(merged);
@@ -92,10 +101,16 @@ public class SwaggerLoader {
         }
     }
 
+    /**
+     * @return swaggers as flowable
+     */
     public Flowable<Resource> getSwaggers() {
         return Flowable.fromIterable(getSwaggersResources());
     }
 
+    /**
+     * @return get swaggers as resources
+     */
     private Collection<Resource> getSwaggersResources() {
         if (cachedResources != null)
             return cachedResources;

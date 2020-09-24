@@ -23,14 +23,23 @@ public class Resource {
         this.created = created;
     }
 
+    /**
+     * @return URI to resource
+     */
     public @NotNull URI getUri() {
         return uri;
     }
 
+    /**
+     * @return time in seconds resource was created
+     */
     public long getCreated() {
         return created;
     }
 
+    /**
+     * @return resource input stream
+     */
     public @Nullable InputStream getInputStream() {
         final String path = getUri().getPath();
         final InputStream stream = getClass().getClassLoader().getResourceAsStream(path);

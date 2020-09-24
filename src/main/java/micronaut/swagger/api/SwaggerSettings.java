@@ -13,9 +13,18 @@ public interface SwaggerSettings {
      */
     String PREFIX = "swagger";
 
+    /**
+     * Default URL for Swagger.
+     */
     String DEFAULT_SWAGGER_URL = "/swagger";
 
+    /**
+     * Default URL for Swagger UI.
+     */
     String DEFAULT_SWAGGER_UI_URL = "/swagger-ui";
 
+    /**
+     * Default URL for Rapidoc.
+     */
     String DEFAULT_RAPIDOC_URL = "/rapidoc";
 }

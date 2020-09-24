@@ -4,8 +4,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.CollectionUtils;
 import micronaut.swagger.api.config.SwaggerConfig;
 import micronaut.swagger.api.model.Resource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.inject.Singleton;
@@ -13,7 +11,7 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * Yaml file merged
+ * Service for merging YAML resources
  *
  * @author Anton Kurako (GoodforGod)
  * @since 21.9.2020
@@ -22,8 +20,10 @@ import java.util.*;
 @Singleton
 public class YamlMerger {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
+    /**
+     * @param resources YAML resources to merge
+     * @return merged yaml in one map
+     */
     public Map<Object, Object> merge(Collection<Resource> resources) {
         if (CollectionUtils.isEmpty(resources))
             return Collections.emptyMap();
@@ -37,23 +37,22 @@ public class YamlMerger {
         return result;
     }
 
+    /**
+     * @param resource YAML file to convert as map
+     * @return YAML file as map
+     */
     private Map<Object, Object> swaggerAsMap(Resource resource) {
-        final String path = resource.getUri().getPath();
-        InputStream stream = getClass().getResourceAsStream(path);
-        if (stream == null) {
-            logger.debug("Reading as stream swagger at path: {}", path);
-            final int metaIndex = path.lastIndexOf("META-INF");
-            final int index = metaIndex == -1 ? 0 : metaIndex;
-            final String localPath = path.substring(index);
-            stream = getClass().getResourceAsStream("/" + localPath);
-        }
-
+        final InputStream stream = resource.getInputStream();
         if (stream == null)
             throw new IllegalArgumentException("Swagger can not be loaded as resource from path:" + resource.getUri());
 
         return new Yaml().load(stream);
     }
 
+    /**
+     * @param merged core YAML file all others are merged into
+     * @param yaml   to merge into merged file
+     */
     @SuppressWarnings("unchecked")
     private void merge(Map<Object, Object> merged, Map<Object, Object> yaml) {
         if (CollectionUtils.isEmpty(yaml))
