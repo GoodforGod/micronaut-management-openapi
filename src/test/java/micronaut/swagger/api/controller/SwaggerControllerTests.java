@@ -1,6 +1,5 @@
 package micronaut.swagger.api.controller;
 
-import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.annotation.MicronautTest;
@@ -22,6 +21,14 @@ class SwaggerControllerTests extends Assertions {
 
     @Test
     void isPresent() {
+        final HttpResponse<?> response = client.getSwagger();
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.status());
+        assertNotNull(response.body());
+    }
+
+    @Test
+    void isPresentWithoutMerge() {
         final HttpResponse<?> response = client.getSwagger();
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.status());

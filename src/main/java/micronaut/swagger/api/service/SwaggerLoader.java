@@ -17,6 +17,7 @@ import java.io.*;
 import java.net.URI;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Swagger loader service
@@ -58,7 +59,8 @@ public class SwaggerLoader {
      * @return current service resource
      */
     public Maybe<Resource> getServiceSwagger() {
-        return getSwaggersResources().stream().max(Comparator.comparingLong(Resource::getCreated))
+        return getSwaggersResources().stream()
+                .max(Comparator.comparingLong(Resource::getCreated))
                 .map(Maybe::just)
                 .orElse(Maybe.empty());
     }
@@ -115,7 +117,9 @@ public class SwaggerLoader {
         if (cachedResources != null)
             return cachedResources;
 
-        this.cachedResources = ResourceUtils.getResources(SWAGGER_DIR, p -> p.endsWith(".yml") || p.endsWith(".yaml"));
+        this.cachedResources = ResourceUtils.getResources(SWAGGER_DIR, p -> p.endsWith(".yml") || p.endsWith(".yaml")).stream()
+                .filter(r -> config.getExclude().stream().noneMatch(excluded -> r.getUri().getPath().endsWith(excluded)))
+                .collect(Collectors.toList());
         return cachedResources;
     }
 }

@@ -1,0 +1,40 @@
+openapi: 3.0.1
+info:
+  title: test
+  version: "1"
+servers:
+- url: http://localhost:8080
+  description: Localhost
+paths:
+  /getter:
+    get:
+      tags:
+      - Getterer
+      operationId: getSwagger
+      parameters:
+      - name: type
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: id
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        default:
+          description: getSwagger default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestController$Response'
+components:
+  schemas:
+    TestController$Response:
+      type: object
+      properties:
+        message:
+          type: string

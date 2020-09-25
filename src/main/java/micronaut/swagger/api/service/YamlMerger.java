@@ -71,14 +71,8 @@ public class YamlMerger {
                 if (v instanceof Map) {
                     if (existingValue instanceof Map) {
                         merge((Map<Object, Object>) existingValue, (Map<Object, Object>) v);
-                    } else if (existingValue instanceof String
-                            || existingValue instanceof Boolean
-                            || existingValue instanceof Double
-                            || existingValue instanceof Integer) {
-                        throw new IllegalArgumentException(
-                                "Cannot merge complex element into a simple element: " + key);
                     } else {
-                        throwUnknownValueType(key, v);
+                        throw new IllegalArgumentException("Cannot merge simple type to map: " + existingValue);
                     }
                 } else if (v instanceof List) {
                     final Object value = merged.get(key);

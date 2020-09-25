@@ -3,8 +3,11 @@ package micronaut.swagger.api.config;
 import io.micronaut.context.annotation.ConfigurationBuilder;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.util.CollectionUtils;
 import micronaut.swagger.api.SwaggerSettings;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -96,8 +99,8 @@ public class SwaggerConfig {
         this.path = path;
     }
 
-    public List<String> getExclude() {
-        return exclude;
+    public @NotNull List<String> getExclude() {
+        return CollectionUtils.isEmpty(exclude) ? Collections.emptyList() : exclude;
     }
 
     public void setExclude(List<String> exclude) {
