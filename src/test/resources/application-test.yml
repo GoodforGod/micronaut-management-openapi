@@ -5,9 +5,7 @@ micronaut:
 swagger:
   enabled: true
   merge: true
-  path: /api
-  exclude:
-    - default.yml
   ui:
     enalbed: true
-    path: /api/ui
+  rapidoc:
+    enalbed: true
