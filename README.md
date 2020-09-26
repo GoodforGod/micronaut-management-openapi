@@ -29,6 +29,13 @@ dependencies {
 </dependency>
 ```
 
+## Endpoints
+
+Library provide exposure for statis resources:
+- **/swagger** - Endpoint for exposing merged [Swagger](https://swagger.io/docs/specification/basic-structure/) (if there are any to merge) as static resource.
+- **/swagger-ui** - Endpoint for exposing [Swagger UI](https://petstore.swagger.io/) page resource.
+- **/rapidoc** - Endpoint for exposing [Rapidoc](https://mrin9.github.io/RapiDoc/examples/example2.html) page resource.
+
 ## Swagger
 
 Library only exposes *Swagger* files, not generating them, so you need to generate 
