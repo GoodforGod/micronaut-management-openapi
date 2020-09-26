@@ -5,13 +5,13 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-swagger-api&metric=coverage)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-swagger-api&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
 
-This project provides *user-friendly* integration for *merging Swaggers* (OpenAPI also), exposing *Swagger & Swagger-UI HTTP* endpoints.
+This project provides out-of-box *user-friendly* integration for *merging Swaggers* (OpenAPI also), exposing *Swagger & Swagger-UI HTTP* endpoints.
 
 ![](https://media.giphy.com/media/HNOzdIugRSx8FnDKWR/giphy.gif)
 
 ## Dependency :rocket:
 
-Library ships with dependencies for *Micronaut 2*.
+Library ships ready for *Micronaut 2*.
 
 **Gradle**
 ```groovy
@@ -44,6 +44,8 @@ implementation("io.swagger.core.v3:swagger-annotations")
 Check [Micronaut official documentation](https://micronaut-projects.github.io/micronaut-openapi/latest/guide/index.html) for more information.
 
 ## Configuration
+
+Library provides out-of-box */swagger (merge enabled), /swagger-ui, /rapidoc* endpoints.
 
 There is ability to easily merge multiple Swagger files via simple configuration property.
 
