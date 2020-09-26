@@ -77,10 +77,6 @@ test {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
     }
-
-    environment([
-            "USE_INTEGRATION_TESTS"   : "$useIntegrationTests",
-    ])
 }
 
 tasks.withType(JavaCompile) {
@@ -117,8 +113,34 @@ publishing {
             from components.java
             artifact sourcesJar
             artifact javadocJar
+
+            pom {
+                name = 'Micronaut Swagger API'
+                url = 'https://github.com/GoodforGod/micronaut-swagger-api'
+                description = 'Project provides user-friendly integration for merging, exposing Swagger/OpenAPI files.'
+
+                license {
+                    name = 'Apache License 2.0'
+                    url = 'https://github.com/GoodforGod/micronaut-swagger-api/blob/master/LICENSE'
+                    distribution = 'repo'
+                }
+
+                developer {
+                    id = 'GoodforGod'
+                    name = 'Anton Kurako'
+                    email = 'goodforgod.dev@gmail.com'
+                    url = 'https://github.com/GoodforGod'
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/GoodforGod/micronaut-swagger-api.git'
+                    developerConnection = 'scm:git:ssh://GoodforGod/micronaut-swagger-api.git'
+                    url = 'https://github.com/GoodforGod/micronaut-swagger-api/tree/master'
+                }
+            }
         }
     }
+
     repositories {
         maven {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"

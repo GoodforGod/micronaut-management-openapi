@@ -29,23 +29,25 @@ public class SwaggerController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final SwaggerLoader loader;
+    private final MediaType mediaType;
 
     @Inject
     public SwaggerController(SwaggerLoader loader) {
         this.loader = loader;
+        this.mediaType = MediaType.of("text/x-yaml");
     }
 
-    @Get(produces = MediaType.APPLICATION_YAML)
+    @Get(produces = "text/x-yaml")
     public Maybe<FileCustomizableResponseType> getSwagger() {
         return loader.getSwagger().map(s -> {
             final InputStream stream = s.getInputStream();
             if (stream != null) {
                 logger.debug("Streaming swagger in path: {}", s.getUri().getPath());
-                return new StreamedFile(stream, MediaType.APPLICATION_YAML_TYPE);
+                return new StreamedFile(stream, mediaType);
             }
 
             logger.debug("System swagger in path: {}", s.getUri().getPath());
-            return new SystemFile(new File(s.getUri().getPath()), MediaType.APPLICATION_YAML_TYPE);
+            return new SystemFile(new File(s.getUri().getPath()), mediaType);
         });
     }
 }

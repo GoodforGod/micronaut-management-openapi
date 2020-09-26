@@ -5,6 +5,9 @@ micronaut:
 swagger:
   enabled: true
   merge: true
+  exclude:
+  - swagger-conf-1.yml
+  - swagger-conf-2.yml
   ui:
     enalbed: true
   rapidoc:
