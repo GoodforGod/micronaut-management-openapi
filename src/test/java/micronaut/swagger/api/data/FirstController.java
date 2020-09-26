@@ -11,7 +11,7 @@ import io.reactivex.Single;
  * @since 25.9.2020
  */
 @Requires(property = "stub.first.enabled", value = "true", defaultValue = "false")
-@Controller("first")
+@Controller("/first")
 public class FirstController {
 
     @Get(produces = MediaType.TEXT_PLAIN)

@@ -8,6 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,6 +28,9 @@ class SwaggerLoaderTests extends Assertions {
 
     @Inject
     private SwaggerConfig config;
+
+    @Inject
+    private YamlMerger merger;
 
     @Test
     void isConfigValid() {
@@ -65,7 +72,7 @@ class SwaggerLoaderTests extends Assertions {
     }
 
     @Test
-    void isMergedPresent() {
+    void isServiceYamlPresentAsMerged() {
         final Resource resource = loader.getMergedSwagger().blockingGet(EMPTY);
         assertNotNull(resource);
         assertNotEquals(EMPTY, resource);
@@ -74,6 +81,45 @@ class SwaggerLoaderTests extends Assertions {
         assertNotNull(resourceCached);
         assertNotEquals(EMPTY, resourceCached);
         assertEquals(resource, resourceCached);
+    }
+
+    @Test
+    void getMergedAndCachedMerged() throws URISyntaxException {
+        final List<Resource> resources = List.of(
+                new Resource(new URI("test-1.yml"), 20),
+                new Resource(new URI("META-INF/swagger/swagger.yml"), 10));
+
+        final SwaggerLoader swaggerLoader = new SwaggerLoader(config, merger) {
+
+            @Override
+            public Collection<Resource> getSwaggers() {
+                return resources;
+            }
+        };
+
+        final Resource resource = swaggerLoader.getMergedSwagger().blockingGet(EMPTY);
+        assertNotNull(resource);
+        assertNotEquals(EMPTY, resource);
+
+        final Resource resourceCached = swaggerLoader.getMergedSwagger().blockingGet(EMPTY);
+        assertNotNull(resourceCached);
+        assertNotEquals(EMPTY, resourceCached);
+        assertEquals(resource, resourceCached);
+    }
+
+    @Test
+    void noSwaggerPresent() {
+        final SwaggerLoader swaggerLoader = new SwaggerLoader(config, merger) {
+
+            @Override
+            public Collection<Resource> getSwaggers() {
+                return Collections.emptyList();
+            }
+        };
+
+        final Resource resource = swaggerLoader.getMergedSwagger().blockingGet(EMPTY);
+        assertNotNull(resource);
+        assertEquals(EMPTY, resource);
     }
 
     @Test
@@ -89,7 +135,7 @@ class SwaggerLoaderTests extends Assertions {
 
     @Test
     void isSingleOnlyPresent() {
-        final List<Resource> resources = loader.getSwaggers().toList().blockingGet();
+        final Collection<Resource> resources = loader.getSwaggers();
         assertNotNull(resources);
         assertFalse(resources.isEmpty());
     }

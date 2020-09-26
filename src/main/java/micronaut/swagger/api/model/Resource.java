@@ -1,6 +1,5 @@
 package micronaut.swagger.api.model;
 
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
@@ -18,7 +17,7 @@ public class Resource {
     private final URI uri;
     private final long created;
 
-    public Resource(@NotNull URI uri, long created) {
+    public Resource(URI uri, long created) {
         this.uri = uri;
         this.created = created;
     }
@@ -26,7 +25,7 @@ public class Resource {
     /**
      * @return URI to resource
      */
-    public @NotNull URI getUri() {
+    public URI getUri() {
         return uri;
     }
 

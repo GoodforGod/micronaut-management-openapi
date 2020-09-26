@@ -2,11 +2,11 @@ package micronaut.swagger.api.service;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.CollectionUtils;
-import io.reactivex.Flowable;
 import io.reactivex.Maybe;
 import micronaut.swagger.api.config.SwaggerConfig;
 import micronaut.swagger.api.model.Resource;
 import micronaut.swagger.api.utils.ResourceUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.*;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,7 +60,7 @@ public class SwaggerLoader {
      * @return current service resource
      */
     public Maybe<Resource> getServiceSwagger() {
-        return getSwaggersResources().stream()
+        return getSwaggers().stream()
                 .max(Comparator.comparingLong(Resource::getCreated))
                 .map(Maybe::just)
                 .orElse(Maybe.empty());
@@ -72,7 +73,7 @@ public class SwaggerLoader {
         if (merged != null)
             return Maybe.just(merged);
 
-        final Collection<Resource> resources = getSwaggersResources();
+        final Collection<Resource> resources = getSwaggers();
         if (CollectionUtils.isEmpty(resources)) {
             logger.debug("No swagger files found for merging");
             return Maybe.empty();
@@ -90,30 +91,55 @@ public class SwaggerLoader {
             return Maybe.empty();
         }
 
+        try {
+            final Resource resource = getFileResource(mergedYaml);
+            return Maybe.just(resource);
+        } catch (Exception e) {
+            final Resource directResource = getDirectResource(mergedYaml);
+            return Maybe.just(directResource);
+        }
+    }
+
+    /**
+     * @param yaml file to dump to file as merged one to cache it
+     * @return resource with dumped merged YAML file
+     */
+    private Resource getFileResource(@NotNull Map<Object, Object> yaml) {
+        logger.debug("Merged swagger file written to: {}", SWAGGER_MERGED);
         try (final Writer writer = new BufferedWriter(new FileWriter(SWAGGER_MERGED))) {
-            new Yaml().dump(mergedYaml, writer);
+            new Yaml().dump(yaml, writer);
             this.merged = new Resource(new URI(SWAGGER_MERGED), Instant.now().getEpochSecond());
-            logger.debug("Merged swagger file written to: {}", SWAGGER_MERGED);
-            return Maybe.just(merged);
-        } catch (IOException e) {
-            // TODO handle when can't write have to dump to inputstream directly
-            throw new IllegalArgumentException(e.getMessage());
+            return merged;
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
     /**
-     * @return swaggers as flowable
+     * @param yaml to dump directly to inputStream
+     * @return resource with YAML as direct inputStream
      */
-    public Flowable<Resource> getSwaggers() {
-        return Flowable.fromIterable(getSwaggersResources());
+    private Resource getDirectResource(@NotNull Map<Object, Object> yaml) {
+        logger.debug("Dumping file directly to input stream");
+        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        try (final Writer writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
+            new Yaml().dump(yaml, writer);
+            return new Resource(null, Instant.now().getEpochSecond()) {
+
+                @Override
+                public InputStream getInputStream() {
+                    return new BufferedInputStream(new ByteArrayInputStream(stream.toByteArray()));
+                }
+            };
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
     }
 
     /**
      * @return get swaggers as resources
      */
-    private Collection<Resource> getSwaggersResources() {
+    public Collection<Resource> getSwaggers() {
         if (cachedResources != null)
             return cachedResources;
 
