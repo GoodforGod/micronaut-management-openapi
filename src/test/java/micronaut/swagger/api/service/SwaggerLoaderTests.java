@@ -35,7 +35,9 @@ class SwaggerLoaderTests extends Assertions {
     @Test
     void isConfigValid() {
         assertNotNull(config.getExclude());
-        assertTrue(config.getExclude().isEmpty());
+        assertFalse(config.getExclude().isEmpty());
+        assertEquals(2, config.getExclude().size());
+
         assertEquals(SwaggerSettings.DEFAULT_SWAGGER_URL, config.getPath());
 
         assertNotNull(config.getRapidocConfig());
@@ -124,13 +126,14 @@ class SwaggerLoaderTests extends Assertions {
 
     @Test
     void noSwaggersPresent() {
+        final List<String> prev = config.getExclude();
         config.setExclude(List.of("swagger.yml"));
 
         final Resource resource = loader.getMergedSwagger().blockingGet(EMPTY);
         assertNotNull(resource);
         assertNotEquals(EMPTY, resource);
 
-        config.setExclude(null);
+        config.setExclude(prev);
     }
 
     @Test

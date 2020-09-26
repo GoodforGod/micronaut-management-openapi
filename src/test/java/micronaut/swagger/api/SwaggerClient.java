@@ -12,7 +12,7 @@ import io.micronaut.http.client.annotation.Client;
 @Client("/")
 public interface SwaggerClient {
 
-    @Get(uri = SwaggerSettings.DEFAULT_SWAGGER_URL, consumes = MediaType.APPLICATION_YAML)
+    @Get(uri = SwaggerSettings.DEFAULT_SWAGGER_URL, consumes = "text/x-yaml")
     HttpResponse<?> getSwagger();
 
     @Get(uri = SwaggerSettings.DEFAULT_SWAGGER_UI_URL, consumes = MediaType.TEXT_HTML)
