@@ -98,6 +98,11 @@ task javadocJar(type: Jar) {
     archiveClassifier = 'javadoc'
 }
 
+tasks.withType(Test) {
+    reports.html.enabled = false
+    reports.junitXml.enabled = false
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
