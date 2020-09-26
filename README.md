@@ -29,6 +29,20 @@ dependencies {
 </dependency>
 ```
 
+## Swagger
+
+Library only exposes *Swagger* files, not generating them, so you need to generate 
+Swagger for your service first and library will help with its exposure.
+
+By adding to your Gradle dependencies:
+
+```yaml
+annotationProcessor("io.micronaut.configuration:micronaut-openapi:2.1.0")
+implementation("io.swagger.core.v3:swagger-annotations")
+```
+
+Check [Micronaut official documentation](https://micronaut-projects.github.io/micronaut-openapi/latest/guide/index.html) for more information.
+
 ## Configuration
 
 There is ability to easily merge multiple Swagger files via simple configuration property.
