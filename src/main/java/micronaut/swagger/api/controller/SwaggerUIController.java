@@ -18,8 +18,10 @@ import micronaut.swagger.api.SwaggerSettings;
 @Controller("${swagger.ui.path:" + SwaggerSettings.DEFAULT_SWAGGER_UI_URL + "}")
 public class SwaggerUIController extends FileController {
 
-    @Get(produces = MediaType.TEXT_HTML)
+    private static final String HTML_CONTENT_TYPE = "text/html;charset=utf-8";
+
+    @Get(produces = HTML_CONTENT_TYPE)
     public Maybe<StreamedFile> getSwagger() {
-        return getFile("swagger-ui/index.html", MediaType.TEXT_HTML_TYPE);
+        return getFile("swagger-api/swagger-ui/index.html", MediaType.TEXT_HTML_TYPE);
     }
 }

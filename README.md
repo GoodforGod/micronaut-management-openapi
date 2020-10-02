@@ -16,7 +16,7 @@ Library ships ready for *Micronaut 2*.
 **Gradle**
 ```groovy
 dependencies {
-    compile 'com.github.goodforgod:micronaut-swagger-api:1.0.0'
+    compile 'com.github.goodforgod:micronaut-swagger-api:1.0.1'
 }
 ```
 
@@ -41,7 +41,7 @@ Library provide exposure for statis resources:
 Library only exposes *Swagger* files, not generating them, so you need to generate 
 Swagger for your service first and library will help with its exposure.
 
-By adding to your Gradle dependencies:
+By adding to your Gradle dependencies (example):
 
 ```yaml
 annotationProcessor("io.micronaut.configuration:micronaut-openapi:2.1.0")
@@ -62,8 +62,8 @@ however most of them are default for *user-friendly* bootstrap just by adding li
 ```yaml
 swagger:
   enabled: true       // enalbed Swagger YAML exposing via HTTP endpoint  (default - true)
-  merge: true         // enabled merging swaggers if multiple found       (default - true)
-  exclude:            // Exclude some swagger files
+  merge: true         // enabled merging swaggers under META-INF/swagger  (default - true)
+  exclude:            // Exclude from merge swaggers under META-INF/swagger
   - swagger-1.yml
   - swagger-2.yml
   path: /swagger      // path for Swagger HTTP endpoint                   (default - /swagger)
@@ -77,6 +77,8 @@ swagger:
 ```
 
 ## Version History
+
+**1.0.1** - UTF-8 charset for swagger correct output, internal changes.
 
 **1.0.0** - Initial version, with */swagger, /swagger-ui, /rapidoc* HTTP endpoint support.
 

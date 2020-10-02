@@ -18,8 +18,10 @@ import micronaut.swagger.api.SwaggerSettings;
 @Controller("${swagger.rapidoc.path:" + SwaggerSettings.DEFAULT_RAPIDOC_URL + "}")
 public class RapidocController extends FileController {
 
-    @Get(produces = MediaType.TEXT_HTML)
+    private static final String HTML_CONTENT_TYPE = "text/html;charset=utf-8";
+
+    @Get(produces = HTML_CONTENT_TYPE)
     public Maybe<StreamedFile> getSwagger() {
-        return getFile("rapidoc/index.html", MediaType.TEXT_HTML_TYPE);
+        return getFile("swagger-api/rapidoc/index.html", MediaType.TEXT_HTML_TYPE);
     }
 }

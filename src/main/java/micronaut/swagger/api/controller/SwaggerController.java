@@ -27,6 +27,8 @@ import java.io.InputStream;
 @Controller("${swagger.path:" + SwaggerSettings.DEFAULT_SWAGGER_URL + "}")
 public class SwaggerController {
 
+    private static final String YAML_CONTENT_TYPE = "text/x-yaml;charset=utf-8";
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final SwaggerLoader loader;
     private final MediaType mediaType;
@@ -34,10 +36,10 @@ public class SwaggerController {
     @Inject
     public SwaggerController(SwaggerLoader loader) {
         this.loader = loader;
-        this.mediaType = MediaType.of("text/x-yaml");
+        this.mediaType = MediaType.of(YAML_CONTENT_TYPE);
     }
 
-    @Get(produces = "text/x-yaml")
+    @Get(produces = YAML_CONTENT_TYPE)
     public Maybe<FileCustomizableResponseType> getSwagger() {
         return loader.getSwagger().map(s -> {
             final InputStream stream = s.getInputStream();
