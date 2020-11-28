@@ -21,7 +21,10 @@
                 rapidoc.requestUpdate();
             });
         }
-        rapidoc.setAttribute('spec-url', contextPath + '/swagger');
+        rapidoc.setAttribute('spec-url', window.location.href.substring(0, window.location.href.lastIndexOf('#') === -1
+            ? window.location.href.length
+            : window.location.href.lastIndexOf('#')
+        ).replace("/rapidoc", '/swagger'));
     </script>
     </body>
 </html>

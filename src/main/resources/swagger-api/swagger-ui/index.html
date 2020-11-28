@@ -39,7 +39,10 @@
                     };
                 },
                 ui = SwaggerUIBundle({
-                    url: contextPath + '/swagger',
+                    url: window.location.href.substring(0, window.location.href.lastIndexOf('#') === -1
+                        ? window.location.href.length
+                        : window.location.href.lastIndexOf('#')
+                    ).replace("/swagger-ui", '/swagger'),
                     dom_id: '#swagger-ui',
                     presets: [
                         SwaggerUIBundle.presets.apis,
