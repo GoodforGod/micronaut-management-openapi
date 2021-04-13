@@ -2,9 +2,9 @@ plugins {
     id 'jacoco'
     id 'maven-publish'
 
-    id 'io.micronaut.library' version '1.0.3'
-    id 'org.sonarqube' version '3.0'
-    id 'com.diffplug.gradle.spotless' version '4.4.0'
+    id 'io.micronaut.library' version '1.4.2'
+    id 'org.sonarqube' version '3.1.1'
+    id 'com.diffplug.spotless' version '5.11.0'
 }
 
 repositories {
@@ -44,7 +44,7 @@ configurations {
 }
 
 micronaut {
-    version '2.2.0'
+    version '2.4.2'
     processing {
         incremental true
         module project.name
