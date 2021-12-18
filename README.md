@@ -32,7 +32,7 @@ dependencies {
 ## Endpoints
 
 Library provide exposure for static resources:
-- **/openapi** - Endpoint for exposing merged [Swagger](https://swagger.io/docs/specification/basic-structure/) (if there are any to merge) as static resource.
+- **/openapi** - Endpoint for exposing [OpenAPI](https://swagger.io/docs/specification/basic-structure/) (if there are any to merge) as static resource.
 - **/swagger-ui** - Endpoint for exposing [Swagger UI](https://petstore.swagger.io/) page resource.
 - **/rapidoc** - Endpoint for exposing [Rapidoc](https://mrin9.github.io/RapiDoc/examples/example2.html) page resource.
 

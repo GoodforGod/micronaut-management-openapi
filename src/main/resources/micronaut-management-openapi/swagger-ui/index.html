@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css"
           href="https://unpkg.com/swagger-ui-themes@3.0.0/themes/3.x/theme-flattop.css"/>
     <link id="dark-theme-swagger-ui" rel="stylesheet" type="text/css"
-          href="https://raw.githack.com/Amoenus/SwaggerDark/master/SwaggerDark.css" disabled/>
+          href="https://cdn.statically.io/gh/goodforgod/openapi-resources/master/swagger-ui/swagger-ui-theme-3.0.0-dark.css" disabled/>
     <style>
         .theme-light {
             --button-theme-font-color: #2c2c2c;
@@ -58,20 +58,14 @@
 
         // function to toggle between light and dark theme
         function toggleTheme() {
-            if (localStorage.getItem("theme") === "theme-dark") {
-                setTheme("theme-light");
-            } else {
-                setTheme("theme-dark");
-            }
+            let themeName = localStorage.getItem("theme") === "theme-dark" ? "theme-light" : "theme-dark";
+            setTheme(themeName);
         }
 
         // Immediately invoked function to set the theme on initial load
         (function () {
-            if (localStorage.getItem('theme') === 'theme-dark') {
-                setTheme('theme-dark');
-            } else {
-                setTheme('theme-light');
-            }
+            let themeName = localStorage.getItem("theme") === "theme-dark" ? "theme-dark" : "theme-light";
+            setTheme(themeName);
         })();
     </script>
 </div>
