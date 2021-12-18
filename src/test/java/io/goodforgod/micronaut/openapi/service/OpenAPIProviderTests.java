@@ -1,12 +1,12 @@
-package io.goodforgod.micronaut.swagger.api.service;
+package io.goodforgod.micronaut.openapi.service;
 
 
-import io.goodforgod.micronaut.swagger.api.SwaggerSettings;
-import io.goodforgod.micronaut.swagger.api.config.RapidocConfig;
-import io.goodforgod.micronaut.swagger.api.config.SwaggerConfig;
-import io.goodforgod.micronaut.swagger.api.config.SwaggerUIConfig;
-import io.goodforgod.micronaut.swagger.api.model.Resource;
-import io.goodforgod.micronaut.swagger.api.model.URIResource;
+import io.goodforgod.micronaut.openapi.OpenAPISettings;
+import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
+import io.goodforgod.micronaut.openapi.config.RapidocConfig;
+import io.goodforgod.micronaut.openapi.config.SwaggerUIConfig;
+import io.goodforgod.micronaut.openapi.model.Resource;
+import io.goodforgod.micronaut.openapi.model.URIResource;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import java.net.URI;
@@ -23,12 +23,12 @@ import org.junit.jupiter.api.Test;
  * @since 25.9.2020
  */
 @MicronautTest
-class SwaggerLoaderTests extends Assertions {
+class OpenAPIProviderTests extends Assertions {
 
     @Inject
-    private SwaggerLoader loader;
+    private OpenAPIProvider loader;
     @Inject
-    private SwaggerConfig config;
+    private OpenAPIConfig config;
     @Inject
     private RapidocConfig rapidocConfig;
     @Inject
@@ -42,18 +42,18 @@ class SwaggerLoaderTests extends Assertions {
         assertFalse(config.getExclude().isEmpty());
         assertEquals(2, config.getExclude().size());
 
-        assertEquals(SwaggerSettings.DEFAULT_SWAGGER_URL, config.getPath());
+        assertEquals(OpenAPISettings.DEFAULT_OPENAPI_URL, config.getPath());
 
-        assertEquals(SwaggerSettings.DEFAULT_RAPIDOC_URL, rapidocConfig.getPath());
+        assertEquals(OpenAPISettings.DEFAULT_RAPIDOC_URL, rapidocConfig.getPath());
         assertFalse(rapidocConfig.isEnabled());
 
-        assertEquals(SwaggerSettings.DEFAULT_SWAGGER_UI_URL, swaggerUIConfig.getPath());
+        assertEquals(OpenAPISettings.DEFAULT_SWAGGER_UI_URL, swaggerUIConfig.getPath());
         assertTrue(swaggerUIConfig.isEnabled());
     }
 
     @Test
     void isServicePresent() {
-        final Resource resource = loader.getFirstSwagger().block();
+        final Resource resource = loader.getAny().orElseThrow();
         assertNotNull(resource);
         assertNotNull(resource.toString());
         assertNotEquals(0, resource.hashCode());
@@ -61,7 +61,7 @@ class SwaggerLoaderTests extends Assertions {
 
     @Test
     void isNonMergedPresent() {
-        final Resource resource = loader.getMergedSwagger().block();
+        final Resource resource = loader.getMerged().orElseThrow();
         assertNotNull(resource);
         assertNotNull(resource.toString());
         assertNotEquals(0, resource.hashCode());
@@ -69,10 +69,10 @@ class SwaggerLoaderTests extends Assertions {
 
     @Test
     void isServiceYamlPresentAsMerged() {
-        final Resource resource = loader.getMergedSwagger().block();
+        final Resource resource = loader.getMerged().orElseThrow();
         assertNotNull(resource);
 
-        final Resource resourceCached = loader.getMergedSwagger().block();
+        final Resource resourceCached = loader.getMerged().orElseThrow();
         assertNotNull(resourceCached);
         assertEquals(resource, resourceCached);
     }
@@ -83,39 +83,39 @@ class SwaggerLoaderTests extends Assertions {
                 URIResource.of(new URI("mock/test-1.yml")),
                 URIResource.of(new URI("META-INF/swagger/swagger.yml")));
 
-        final SwaggerLoader swaggerLoader = new SwaggerLoader(config, merger) {
+        final OpenAPIProvider openAPIProvider = new OpenAPIProvider(config, merger) {
 
             @Override
-            public Collection<Resource> getSwaggers() {
+            public Collection<Resource> getAll() {
                 return resources;
             }
         };
 
-        final Resource resource = swaggerLoader.getMergedSwagger().block();
+        final Resource resource = openAPIProvider.getMerged().orElseThrow();
         assertNotNull(resource);
 
-        final Resource resourceCached = swaggerLoader.getMergedSwagger().block();
+        final Resource resourceCached = openAPIProvider.getMerged().orElseThrow();
         assertNotNull(resourceCached);
         assertEquals(resource, resourceCached);
     }
 
     @Test
     void noSwaggerPresent() {
-        final SwaggerLoader swaggerLoader = new SwaggerLoader(config, merger) {
+        final OpenAPIProvider openAPIProvider = new OpenAPIProvider(config, merger) {
 
             @Override
-            public Collection<Resource> getSwaggers() {
+            public Collection<Resource> getAll() {
                 return Collections.emptyList();
             }
         };
 
-        final Resource resource = swaggerLoader.getMergedSwagger().block();
+        final Resource resource = openAPIProvider.getMerged().orElseThrow();
         assertNull(resource);
     }
 
     @Test
     void isSingleOnlyPresent() {
-        final Collection<Resource> resources = loader.getSwaggers();
+        final Collection<Resource> resources = loader.getAll();
         assertNotNull(resources);
         assertFalse(resources.isEmpty());
     }

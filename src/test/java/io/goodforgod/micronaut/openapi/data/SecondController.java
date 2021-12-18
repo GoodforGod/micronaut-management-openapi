@@ -1,11 +1,10 @@
-package io.goodforgod.micronaut.swagger.api.data;
+package io.goodforgod.micronaut.openapi.data;
 
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import reactor.core.publisher.Mono;
 
 
 /**
@@ -17,7 +16,7 @@ import reactor.core.publisher.Mono;
 public class SecondController {
 
     @Get(produces = MediaType.TEXT_PLAIN)
-    public Mono<String> getName() {
-        return Mono.just("Bob");
+    public String getName() {
+        return "Bob";
     }
 }

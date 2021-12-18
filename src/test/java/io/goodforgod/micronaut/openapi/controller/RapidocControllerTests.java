@@ -1,7 +1,7 @@
-package io.goodforgod.micronaut.swagger.api.controller;
+package io.goodforgod.micronaut.openapi.controller;
 
 
-import io.goodforgod.micronaut.swagger.api.SwaggerClient;
+import io.goodforgod.micronaut.openapi.SwaggerClient;
 import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;

@@ -1,4 +1,4 @@
-package io.goodforgod.micronaut.swagger.api;
+package io.goodforgod.micronaut.openapi;
 
 
 import io.micronaut.http.HttpResponse;
@@ -14,12 +14,12 @@ import io.micronaut.http.client.annotation.Client;
 @Client("/")
 public interface SwaggerClient {
 
-    @Get(uri = SwaggerSettings.DEFAULT_SWAGGER_URL, consumes = "text/x-yaml")
+    @Get(uri = OpenAPISettings.DEFAULT_OPENAPI_URL, consumes = "text/x-yaml")
     HttpResponse<?> getSwagger();
 
-    @Get(uri = SwaggerSettings.DEFAULT_SWAGGER_UI_URL, consumes = MediaType.TEXT_HTML)
+    @Get(uri = OpenAPISettings.DEFAULT_SWAGGER_UI_URL, consumes = MediaType.TEXT_HTML)
     HttpResponse<?> getSwaggerUI();
 
-    @Get(uri = SwaggerSettings.DEFAULT_RAPIDOC_URL, consumes = MediaType.TEXT_HTML)
+    @Get(uri = OpenAPISettings.DEFAULT_RAPIDOC_URL, consumes = MediaType.TEXT_HTML)
     HttpResponse<?> getRapidoc();
 }

@@ -1,8 +1,8 @@
-package io.goodforgod.micronaut.swagger.api.service;
+package io.goodforgod.micronaut.openapi.service;
 
 
-import io.goodforgod.micronaut.swagger.api.model.Resource;
-import io.goodforgod.micronaut.swagger.api.model.URIResource;
+import io.goodforgod.micronaut.openapi.model.Resource;
+import io.goodforgod.micronaut.openapi.model.URIResource;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import java.net.URI;
