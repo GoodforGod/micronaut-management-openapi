@@ -1,0 +1,10 @@
+micronaut:
+  security:
+    enabled: false
+
+swagger:
+  enabled: true
+  merge: true
+  exclude:
+  - swagger.yml
+  - mock/swagger.yml

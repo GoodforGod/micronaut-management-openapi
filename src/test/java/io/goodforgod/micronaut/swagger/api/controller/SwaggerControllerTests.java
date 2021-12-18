@@ -1,13 +1,14 @@
-package micronaut.swagger.api.controller;
+package io.goodforgod.micronaut.swagger.api.controller;
 
+
+import io.goodforgod.micronaut.swagger.api.SwaggerClient;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.test.annotation.MicronautTest;
-import micronaut.swagger.api.SwaggerClient;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
 
 /**
  * @author Anton Kurako (GoodforGod)

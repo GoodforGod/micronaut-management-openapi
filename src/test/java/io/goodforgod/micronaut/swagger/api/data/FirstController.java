@@ -1,10 +1,12 @@
-package micronaut.swagger.api.data;
+package io.goodforgod.micronaut.swagger.api.data;
+
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-import io.reactivex.Single;
+import reactor.core.publisher.Mono;
+
 
 /**
  * @author Anton Kurako (GoodforGod)
@@ -15,7 +17,7 @@ import io.reactivex.Single;
 public class FirstController {
 
     @Get(produces = MediaType.TEXT_PLAIN)
-    public Single<String> getSurname() {
-        return Single.just("Tower");
+    public Mono<String> getSurname() {
+        return Mono.just("Tower");
     }
 }
