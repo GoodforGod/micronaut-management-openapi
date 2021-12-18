@@ -5,6 +5,7 @@ import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
 import io.goodforgod.micronaut.openapi.model.Resource;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class SwaggerExcludeLoaderTests extends Assertions {
         final String fileName = "swagger.yml";
         assertTrue(config.getExclude().contains(fileName));
 
-        final Resource resource = loader.getMerged().orElseThrow();
-        assertNull(resource);
+        final Optional<Resource> resource = loader.getMerged();
+        assertTrue(resource.isEmpty());
     }
 }

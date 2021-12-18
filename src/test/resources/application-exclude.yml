@@ -2,7 +2,8 @@ micronaut:
   security:
     enabled: false
 
-swagger:
+
+openapi:
   enabled: true
   merge: true
   exclude:

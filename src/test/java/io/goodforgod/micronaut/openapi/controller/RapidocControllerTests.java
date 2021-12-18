@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
  * @author Anton Kurako (GoodforGod)
  * @since 25.9.2020
  */
-@Property(name = "swagger.rapidoc.enabled", value = "true")
+@Property(name = "openapi.rapidoc.enabled", value = "true")
 @MicronautTest
 class RapidocControllerTests extends Assertions {
 

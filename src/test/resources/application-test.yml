@@ -2,13 +2,14 @@ micronaut:
   security:
     enabled: false
 
-swagger:
+
+openapi:
   enabled: true
   merge: true
   exclude:
   - swagger-conf-1.yml
   - swagger-conf-2.yml
-  ui:
+  swagger-ui:
     enalbed: true
   rapidoc:
     enalbed: true

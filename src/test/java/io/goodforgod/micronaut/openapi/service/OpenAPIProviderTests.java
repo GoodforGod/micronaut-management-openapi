@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -109,8 +110,8 @@ class OpenAPIProviderTests extends Assertions {
             }
         };
 
-        final Resource resource = openAPIProvider.getMerged().orElseThrow();
-        assertNull(resource);
+        final Optional<Resource> resource = openAPIProvider.getMerged();
+        assertTrue(resource.isEmpty());
     }
 
     @Test
