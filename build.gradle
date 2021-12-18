@@ -33,19 +33,19 @@ dependencies {
 
     compileOnly "io.micronaut:micronaut-inject-java"
     compileOnly "io.swagger.core.v3:swagger-annotations"
-    compileOnly "io.micronaut:micronaut-http-server-netty"
+    compileOnly "io.micronaut:micronaut-http-server"
 
     implementation "org.jetbrains:annotations:22.0.0"
 
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testAnnotationProcessor "io.micronaut.openapi:micronaut-openapi"
 
-    testImplementation "io.micronaut:micronaut-http-server-netty"
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut.test:micronaut-test-core"
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testCompileOnly "io.swagger.core.v3:swagger-annotations"
 
+    testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
     testRuntimeOnly "ch.qos.logback:logback-classic:1.2.8"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.junit.jupiter:junit-jupiter-api"

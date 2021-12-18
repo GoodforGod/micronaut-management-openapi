@@ -30,6 +30,7 @@ import java.util.Optional;
  * @since 20.9.2020
  */
 @Hidden
+@Requires(classes = FileCustomizableResponseType.class)
 @Requires(property = OpenAPISettings.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
 @Controller("${" + OpenAPISettings.PREFIX + ".path:" + OpenAPISettings.DEFAULT_OPENAPI_URL + "}")
 public class OpenAPIController {
