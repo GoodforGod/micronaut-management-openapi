@@ -28,7 +28,7 @@ import java.util.function.Supplier;
  * @since 22.9.2020
  */
 @Requires(property = OpenAPISettings.PREFIX + ".rapidoc.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
-@Controller("${swagger.rapidoc.path:" + OpenAPISettings.DEFAULT_RAPIDOC_URL + "}")
+@Controller("${" + OpenAPISettings.PREFIX + ".rapidoc.path:" + OpenAPISettings.DEFAULT_RAPIDOC_URL + "}")
 public class RapidocController {
 
     private static final String RAPIDOC_PATH = "micronaut-management-openapi/rapidoc/index.html";

@@ -27,8 +27,8 @@ import java.util.function.Supplier;
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
  */
-@Requires(property = OpenAPISettings.PREFIX + ".swagger-ui.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
-@Controller("${swagger.swagger-ui.path:" + OpenAPISettings.DEFAULT_SWAGGER_UI_URL + "}")
+@Requires(property = OpenAPISettings.PREFIX + ".swagger-ui.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
+@Controller("${" + OpenAPISettings.PREFIX + ".swagger-ui.path:" + OpenAPISettings.DEFAULT_SWAGGER_UI_URL + "}")
 public class SwaggerUIController {
 
     private static final String SWAGGER_IU_PATH = "micronaut-management-openapi/swagger-ui/index.html";

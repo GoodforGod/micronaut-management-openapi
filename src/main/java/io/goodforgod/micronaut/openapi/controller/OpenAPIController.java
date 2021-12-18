@@ -31,7 +31,7 @@ import java.util.Optional;
  */
 @Hidden
 @Requires(property = OpenAPISettings.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
-@Controller("${swagger.path:" + OpenAPISettings.DEFAULT_OPENAPI_URL + "}")
+@Controller("${" + OpenAPISettings.PREFIX + ".path:" + OpenAPISettings.DEFAULT_OPENAPI_URL + "}")
 public class OpenAPIController {
 
     private static final String YAML_CONTENT_TYPE = "text/x-yaml;charset=utf-8";

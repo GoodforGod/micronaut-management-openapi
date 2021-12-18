@@ -46,7 +46,7 @@ class OpenAPIProviderTests extends Assertions {
         assertEquals(OpenAPISettings.DEFAULT_OPENAPI_URL, config.getPath());
 
         assertEquals(OpenAPISettings.DEFAULT_RAPIDOC_URL, rapidocConfig.getPath());
-        assertFalse(rapidocConfig.isEnabled());
+        assertTrue(rapidocConfig.isEnabled());
 
         assertEquals(OpenAPISettings.DEFAULT_SWAGGER_UI_URL, swaggerUIConfig.getPath());
         assertTrue(swaggerUIConfig.isEnabled());

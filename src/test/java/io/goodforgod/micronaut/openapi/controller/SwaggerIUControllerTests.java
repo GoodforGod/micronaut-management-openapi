@@ -2,6 +2,7 @@ package io.goodforgod.micronaut.openapi.controller;
 
 
 import io.goodforgod.micronaut.openapi.SwaggerClient;
+import io.micronaut.context.annotation.Property;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
  * @author Anton Kurako (GoodforGod)
  * @since 25.9.2020
  */
+@Property(name = "openapi.swagger-ui.enabled", value = "true")
 @MicronautTest
 class SwaggerIUControllerTests extends Assertions {
 

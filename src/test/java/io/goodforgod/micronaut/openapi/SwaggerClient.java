@@ -14,12 +14,15 @@ import io.micronaut.http.client.annotation.Client;
 @Client("/")
 public interface SwaggerClient {
 
-    @Get(uri = OpenAPISettings.DEFAULT_OPENAPI_URL, consumes = "text/x-yaml")
+    @Get(uri = "${" + OpenAPISettings.PREFIX + ".path:" + OpenAPISettings.DEFAULT_OPENAPI_URL + "}",
+            consumes = "text/x-yaml;charset=utf-8")
     HttpResponse<?> getSwagger();
 
-    @Get(uri = OpenAPISettings.DEFAULT_SWAGGER_UI_URL, consumes = MediaType.TEXT_HTML)
+    @Get(uri = "${" + OpenAPISettings.PREFIX + ".swagger-ui.path:" + OpenAPISettings.DEFAULT_SWAGGER_UI_URL + "}",
+            consumes = MediaType.TEXT_HTML)
     HttpResponse<?> getSwaggerUI();
 
-    @Get(uri = OpenAPISettings.DEFAULT_RAPIDOC_URL, consumes = MediaType.TEXT_HTML)
+    @Get(uri = "${" + OpenAPISettings.PREFIX + ".rapidoc.path:" + OpenAPISettings.DEFAULT_RAPIDOC_URL + "}",
+            consumes = MediaType.TEXT_HTML)
     HttpResponse<?> getRapidoc();
 }

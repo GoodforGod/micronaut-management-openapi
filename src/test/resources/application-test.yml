@@ -10,6 +10,6 @@ openapi:
   - swagger-conf-1.yml
   - swagger-conf-2.yml
   swagger-ui:
-    enalbed: true
+    enabled: true
   rapidoc:
-    enalbed: true
+    enabled: true
