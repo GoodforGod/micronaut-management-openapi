@@ -2,10 +2,10 @@ package io.goodforgod.micronaut.openapi;
 
 
 /**
- * Settings for OpenAPI.
+ * Configuration for OpenAPI.
  *
  * @author Anton Kurako (GoodforGod)
- * @since 20.9.2020
+ * @since 19.12.2021
  */
 public final class OpenAPISettings {
 
@@ -15,6 +15,11 @@ public final class OpenAPISettings {
      * Prefix to use for all OpenAPI Library settings.
      */
     public static final String PREFIX = "openapi";
+
+    /**
+     * Default directory inside JAR to scan for OpenAPI files
+     */
+    public static final String DEFAULT_DIR = "META-INF/swagger";
 
     /**
      * Default URL for OpenAPI.

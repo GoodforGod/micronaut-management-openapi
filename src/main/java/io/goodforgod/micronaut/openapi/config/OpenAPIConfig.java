@@ -37,6 +37,13 @@ public class OpenAPIConfig {
     private String path = OpenAPISettings.DEFAULT_OPENAPI_URL;
 
     /**
+     * Default directory inside JAR to scan for OpenAPI files
+     * 
+     * @see io.goodforgod.micronaut.openapi.service.OpenAPIProvider
+     */
+    private String defaultDirectory = OpenAPISettings.DEFAULT_DIR;
+
+    /**
      * Exclude listed swagger files (if {@link #include} is not specified)
      */
     private Set<String> exclude;
@@ -68,6 +75,14 @@ public class OpenAPIConfig {
 
     void setPath(String path) {
         this.path = path;
+    }
+
+    public String getDefaultDirectory() {
+        return defaultDirectory;
+    }
+
+    void setDefaultDirectory(String defaultDirectory) {
+        this.defaultDirectory = defaultDirectory;
     }
 
     public @NotNull Set<String> getExclude() {

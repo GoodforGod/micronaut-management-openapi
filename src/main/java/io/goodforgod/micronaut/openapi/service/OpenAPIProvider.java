@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import org.yaml.snakeyaml.Yaml;
 @Singleton
 public class OpenAPIProvider {
 
-    private static final String DEFAULT_DIR = "META-INF/swagger";
     private static final String MERGED_FILE = "openapi-merged.yml";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -39,12 +39,12 @@ public class OpenAPIProvider {
     private Collection<Resource> cachedResources = null;
     private Resource merged = null;
 
-    private final OpenAPIConfig config;
+    private final OpenAPIConfig openAPIConfig;
     private final YamlMerger yamlMerger;
 
     @Inject
-    public OpenAPIProvider(OpenAPIConfig config, YamlMerger yamlMerger) {
-        this.config = config;
+    public OpenAPIProvider(OpenAPIConfig openAPIConfig, YamlMerger yamlMerger) {
+        this.openAPIConfig = openAPIConfig;
         this.yamlMerger = yamlMerger;
     }
 
@@ -137,8 +137,8 @@ public class OpenAPIProvider {
             return cachedResources;
         }
 
-        if (!config.getInclude().isEmpty()) {
-            return config.getInclude().stream()
+        if (!openAPIConfig.getInclude().isEmpty()) {
+            return openAPIConfig.getInclude().stream()
                     .map(path -> {
                         try {
                             final URL resource = OpenAPIProvider.class.getResource(path);
@@ -154,12 +154,13 @@ public class OpenAPIProvider {
                     .map(URIResource::of)
                     .collect(Collectors.toList());
         } else {
-            this.cachedResources = ResourceUtils.getResources(DEFAULT_DIR, p -> p.endsWith(".yml") || p.endsWith(".yaml"))
+            final String directory = openAPIConfig.getDefaultDirectory();
+            final Set<String> exclude = openAPIConfig.getExclude();
+            this.cachedResources = ResourceUtils.getResources(directory, p -> p.endsWith(".yml") || p.endsWith(".yaml"))
                     .stream()
-                    .filter(r -> config.getExclude().stream().noneMatch(excluded -> r.getURI().getPath().endsWith(excluded)))
+                    .filter(r -> exclude.stream().noneMatch(ex -> r.getURI().getPath().endsWith(ex)))
                     .collect(Collectors.toList());
+            return cachedResources;
         }
-
-        return cachedResources;
     }
 }
