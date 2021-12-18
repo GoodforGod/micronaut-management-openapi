@@ -19,7 +19,7 @@ sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
 micronaut {
-    version("3.2.2")
+    version("3.2.3")
     processing {
         incremental(true)
         module(project.name)
@@ -32,13 +32,14 @@ dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
 
     compileOnly "io.swagger.core.v3:swagger-annotations"
+    compileOnly "io.micronaut:micronaut-http-server"
+    compileOnly "io.micronaut:micronaut-inject-java"
 
-    implementation "org.jetbrains:annotations:22.0.0"
-    implementation "io.micronaut:micronaut-http-server-netty"
     implementation "io.projectreactor:reactor-core"
+    implementation "org.jetbrains:annotations:22.0.0"
 
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
-    testAnnotationProcessor "io.micronaut.configuration:micronaut-openapi"
+    testAnnotationProcessor "io.micronaut.openapi:micronaut-openapi"
 
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut.test:micronaut-test-core"
@@ -52,7 +53,7 @@ dependencies {
 }
 
 test {
-    failFast(true)
+    failFast(false)
     useJUnitPlatform()
     testLogging {
         showStandardStreams(false)
@@ -75,7 +76,7 @@ spotless {
         encoding("UTF-8")
         importOrder()
         removeUnusedImports()
-        eclipse("4.21.0").configFile("${projectDir}/codestyle.xml")
+        eclipse("4.21.0").configFile("${projectDir}/config/codestyle.xml")
     }
 }
 
