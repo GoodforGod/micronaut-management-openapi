@@ -6,7 +6,7 @@
  */
 @Configuration
 @RequiresSwagger
-package micronaut.swagger.api;
+package io.goodforgod.micronaut.swagger.api;
+
 
 import io.micronaut.context.annotation.Configuration;
-import micronaut.swagger.api.config.RequiresSwagger;

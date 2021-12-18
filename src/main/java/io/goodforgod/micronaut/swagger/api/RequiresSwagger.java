@@ -1,13 +1,11 @@
-package micronaut.swagger.api.config;
+package io.goodforgod.micronaut.swagger.api;
+
 
 import io.micronaut.context.annotation.Requires;
-import micronaut.swagger.api.SwaggerSettings;
-
 import java.lang.annotation.*;
 
+
 /**
- * A custom requirement for ArangoDB.
- *
  * @author Anton Kurako (GoodforGod)
  * @since 24.9.2020
  */
@@ -15,5 +13,5 @@ import java.lang.annotation.*;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.PACKAGE, ElementType.TYPE })
-public @interface RequiresSwagger {
+@interface RequiresSwagger {
 }

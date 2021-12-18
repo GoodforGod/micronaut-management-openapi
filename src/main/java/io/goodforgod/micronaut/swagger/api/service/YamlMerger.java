@@ -1,14 +1,15 @@
-package micronaut.swagger.api.service;
+package io.goodforgod.micronaut.swagger.api.service;
 
-import io.micronaut.context.annotation.Requires;
+
+import io.goodforgod.micronaut.swagger.api.model.Resource;
+import io.goodforgod.micronaut.swagger.api.model.URIResource;
 import io.micronaut.core.util.CollectionUtils;
-import micronaut.swagger.api.config.SwaggerConfig;
-import micronaut.swagger.api.model.Resource;
-import org.yaml.snakeyaml.Yaml;
-
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.io.InputStream;
 import java.util.*;
+import org.jetbrains.annotations.NotNull;
+import org.yaml.snakeyaml.Yaml;
+
 
 /**
  * Service for merging YAML resources
@@ -16,7 +17,6 @@ import java.util.*;
  * @author Anton Kurako (GoodforGod)
  * @since 21.9.2020
  */
-@Requires(beans = SwaggerConfig.class)
 @Singleton
 public class YamlMerger {
 
@@ -41,10 +41,16 @@ public class YamlMerger {
      * @param resource YAML file to convert as map
      * @return YAML file as map
      */
-    private Map<Object, Object> swaggerAsMap(Resource resource) {
+    private Map<Object, Object> swaggerAsMap(@NotNull Resource resource) {
         final InputStream stream = resource.getInputStream();
-        if (stream == null)
-            throw new IllegalArgumentException("Swagger can not be loaded as resource from path:" + resource.getUri());
+        if (stream == null) {
+            if (resource instanceof URIResource) {
+                throw new IllegalArgumentException(
+                        "Swagger can not be loaded as resource from path:" + ((URIResource) resource).getUri());
+            } else {
+                throw new IllegalArgumentException("Swagger can not be loaded as resource");
+            }
+        }
 
         return new Yaml().load(stream);
     }
@@ -105,6 +111,7 @@ public class YamlMerger {
     }
 
     private void throwUnknownValueType(Object key, Object yamlValue) {
-        throw new IllegalArgumentException("Cannot merge element of unknown type: " + key + ": " + yamlValue.getClass().getSimpleName());
+        throw new IllegalArgumentException(
+                "Cannot merge element of unknown type: " + key + ": " + yamlValue.getClass().getSimpleName());
     }
 }
