@@ -1,8 +1,9 @@
-package io.goodforgod.micronaut.swagger.api.service;
+package io.goodforgod.micronaut.openapi.service;
 
 
-import io.goodforgod.micronaut.swagger.api.model.Resource;
-import io.goodforgod.micronaut.swagger.api.model.URIResource;
+import io.goodforgod.micronaut.openapi.model.BufferedResource;
+import io.goodforgod.micronaut.openapi.model.Resource;
+import io.goodforgod.micronaut.openapi.model.URIResource;
 import io.micronaut.core.util.CollectionUtils;
 import jakarta.inject.Singleton;
 import java.io.InputStream;
@@ -31,8 +32,8 @@ public class YamlMerger {
         final Map<Object, Object> result = new LinkedHashMap<>();
 
         resources.stream()
-                .map(this::swaggerAsMap)
-                .forEach(yaml -> merge(result, yaml));
+                .map(this::getYamlAsMap)
+                .forEach(yaml -> mergeYamlFiles(result, yaml));
 
         return result;
     }
@@ -41,18 +42,22 @@ public class YamlMerger {
      * @param resource YAML file to convert as map
      * @return YAML file as map
      */
-    private Map<Object, Object> swaggerAsMap(@NotNull Resource resource) {
-        final InputStream stream = resource.getInputStream();
-        if (stream == null) {
-            if (resource instanceof URIResource) {
-                throw new IllegalArgumentException(
-                        "Swagger can not be loaded as resource from path:" + ((URIResource) resource).getUri());
-            } else {
-                throw new IllegalArgumentException("Swagger can not be loaded as resource");
+    private Map<Object, Object> getYamlAsMap(@NotNull Resource resource) {
+        if (resource instanceof BufferedResource) {
+            return new Yaml().load(((BufferedResource) resource).getValue());
+        } else {
+            final InputStream inputStream = resource.getStream();
+            if (inputStream == null) {
+                if (resource instanceof URIResource) {
+                    throw new IllegalArgumentException(
+                            "Swagger can not be loaded as resource from path:" + ((URIResource) resource).getURI());
+                } else {
+                    throw new IllegalArgumentException("Swagger can not be loaded as resource");
+                }
             }
-        }
 
-        return new Yaml().load(stream);
+            return new Yaml().load(inputStream);
+        }
     }
 
     /**
@@ -60,9 +65,10 @@ public class YamlMerger {
      * @param yaml   to merge into merged file
      */
     @SuppressWarnings("unchecked")
-    private void merge(Map<Object, Object> merged, Map<Object, Object> yaml) {
-        if (CollectionUtils.isEmpty(yaml))
+    private void mergeYamlFiles(Map<Object, Object> merged, Map<Object, Object> yaml) {
+        if (CollectionUtils.isEmpty(yaml)) {
             return;
+        }
 
         for (Map.Entry<Object, Object> entry : yaml.entrySet()) {
             final Object v = entry.getValue();
@@ -76,15 +82,15 @@ public class YamlMerger {
             if (existingValue != null) {
                 if (v instanceof Map) {
                     if (existingValue instanceof Map) {
-                        merge((Map<Object, Object>) existingValue, (Map<Object, Object>) v);
+                        mergeYamlFiles((Map<Object, Object>) existingValue, (Map<Object, Object>) v);
                     } else {
-                        throw new IllegalArgumentException("Cannot merge simple type to map: " + existingValue);
+                        throw new IllegalArgumentException("Can't merge simple type to map: " + existingValue);
                     }
                 } else if (v instanceof List) {
                     final Object value = merged.get(key);
                     final boolean v2 = value instanceof List;
                     if (!v2)
-                        throw new IllegalArgumentException("Cannot merge a list with a non-list: " + key);
+                        throw new IllegalArgumentException("Can't merge a list with a non-list: " + key);
 
                     ((List<Object>) value).addAll(((List<Object>) v));
                 } else if (v instanceof String
@@ -112,6 +118,6 @@ public class YamlMerger {
 
     private void throwUnknownValueType(Object key, Object yamlValue) {
         throw new IllegalArgumentException(
-                "Cannot merge element of unknown type: " + key + ": " + yamlValue.getClass().getSimpleName());
+                "Can't merge element of unknown type: " + key + ": " + yamlValue.getClass().getSimpleName());
     }
 }

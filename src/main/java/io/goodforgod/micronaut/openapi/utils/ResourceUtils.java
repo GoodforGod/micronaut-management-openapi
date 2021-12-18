@@ -1,7 +1,7 @@
-package io.goodforgod.micronaut.swagger.api.utils;
+package io.goodforgod.micronaut.openapi.utils;
 
 
-import io.goodforgod.micronaut.swagger.api.model.URIResource;
+import io.goodforgod.micronaut.openapi.model.URIResource;
 import io.micronaut.core.io.IOUtils;
 import io.micronaut.core.util.ArrayUtils;
 import java.io.*;
@@ -110,11 +110,17 @@ public final class ResourceUtils {
     public static Optional<String> getFileAsString(@NotNull String path) {
         return ResourceUtils.getFileAsStream(path)
                 .map(s -> {
-                    try (BufferedReader in = new BufferedReader(new InputStreamReader(s, StandardCharsets.UTF_8))) {
-                        return IOUtils.readText(in);
+                    try {
+                        return readFileFromStream(s);
                     } catch (IOException e) {
-                        throw new IllegalArgumentException("Cannot read file: " + path, e);
+                        throw new IllegalArgumentException("Can't read file: " + path, e);
                     }
                 });
+    }
+
+    public static String readFileFromStream(InputStream stream) throws IOException {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
+            return IOUtils.readText(in);
+        }
     }
 }

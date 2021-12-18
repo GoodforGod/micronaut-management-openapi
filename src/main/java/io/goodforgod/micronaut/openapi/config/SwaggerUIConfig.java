@@ -1,7 +1,7 @@
-package io.goodforgod.micronaut.swagger.api.config;
+package io.goodforgod.micronaut.openapi.config;
 
 
-import io.goodforgod.micronaut.swagger.api.SwaggerSettings;
+import io.goodforgod.micronaut.openapi.OpenAPISettings;
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 
@@ -11,12 +11,12 @@ import io.micronaut.context.annotation.ConfigurationProperties;
  * @author Anton Kurako (GoodforGod)
  * @since 18.12.2021
  */
-@ConfigurationProperties(SwaggerSettings.PREFIX + ".swagger-ui")
+@ConfigurationProperties(OpenAPISettings.PREFIX + ".swagger-ui")
 public class SwaggerUIConfig {
 
     private boolean enabled = true;
 
-    private String path = SwaggerSettings.DEFAULT_SWAGGER_UI_URL;
+    private String path = OpenAPISettings.DEFAULT_SWAGGER_UI_URL;
 
     public String getPath() {
         return path;

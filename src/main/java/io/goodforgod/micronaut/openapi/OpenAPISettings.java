@@ -1,25 +1,25 @@
-package io.goodforgod.micronaut.swagger.api;
+package io.goodforgod.micronaut.openapi;
 
 
 /**
- * Settings for Swagger.
+ * Settings for OpenAPI.
  *
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
  */
-public final class SwaggerSettings {
+public final class OpenAPISettings {
 
-    private SwaggerSettings() {}
-
-    /**
-     * Prefix to use for all Swagger Library settings.
-     */
-    public static final String PREFIX = "swagger";
+    private OpenAPISettings() {}
 
     /**
-     * Default URL for Swagger.
+     * Prefix to use for all OpenAPI Library settings.
      */
-    public static final String DEFAULT_SWAGGER_URL = "/swagger";
+    public static final String PREFIX = "openapi";
+
+    /**
+     * Default URL for OpenAPI.
+     */
+    public static final String DEFAULT_OPENAPI_URL = "/openapi";
 
     /**
      * Default URL for Swagger UI.

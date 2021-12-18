@@ -1,8 +1,8 @@
-package io.goodforgod.micronaut.swagger.api.config;
+package io.goodforgod.micronaut.openapi.config;
 
 
-import io.goodforgod.micronaut.swagger.api.SwaggerSettings;
-import io.goodforgod.micronaut.swagger.api.controller.SwaggerController;
+import io.goodforgod.micronaut.openapi.OpenAPISettings;
+import io.goodforgod.micronaut.openapi.controller.OpenAPIController;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.core.util.CollectionUtils;
 import java.util.Collections;
@@ -13,16 +13,16 @@ import org.jetbrains.annotations.NotNull;
 
 
 /**
- * Configuration for swagger library
+ * Configuration for OpenAPI
  *
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
  */
-@ConfigurationProperties(SwaggerSettings.PREFIX)
-public class SwaggerConfig {
+@ConfigurationProperties(OpenAPISettings.PREFIX)
+public class OpenAPIConfig {
 
     /**
-     * Enables {@link SwaggerController} controller
+     * Enables {@link OpenAPIController} controller
      */
     private boolean enabled = true;
 
@@ -32,9 +32,9 @@ public class SwaggerConfig {
     private boolean merge = false;
 
     /**
-     * Allow change {@link SwaggerController} controller path
+     * Allow change {@link OpenAPIController} controller path
      */
-    private String path = SwaggerSettings.DEFAULT_SWAGGER_URL;
+    private String path = OpenAPISettings.DEFAULT_OPENAPI_URL;
 
     /**
      * Exclude listed swagger files (if {@link #include} is not specified)

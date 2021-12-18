@@ -1,4 +1,4 @@
-package io.goodforgod.micronaut.swagger.api.model;
+package io.goodforgod.micronaut.openapi.model;
 
 
 import java.io.InputStream;
@@ -27,20 +27,22 @@ public final class URIResource implements Resource {
     /**
      * @return URI to resource
      */
-    public URI getUri() {
+    public URI getURI() {
         return uri;
     }
 
-    /**
-     * @return resource input stream
-     */
     @Override
-    public @Nullable InputStream getInputStream() {
-        final String path = getUri().getPath();
+    public @Nullable InputStream getStream() {
+        final String path = getURI().getPath();
         final InputStream stream = getClass().getClassLoader().getResourceAsStream(path);
         return (stream == null)
                 ? getClass().getClassLoader().getResourceAsStream("/" + path)
                 : stream;
+        // try {
+        // return ResourceUtils.readFileFromStream(inputStream);
+        // } catch (IOException e) {
+        // throw new IllegalArgumentException("Can't read file: " + path, e);
+        // }
     }
 
     @Override

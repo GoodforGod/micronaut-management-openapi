@@ -1,4 +1,4 @@
-package io.goodforgod.micronaut.swagger.api.model;
+package io.goodforgod.micronaut.openapi.model;
 
 
 import java.io.InputStream;
@@ -12,5 +12,5 @@ import org.jetbrains.annotations.Nullable;
 public interface Resource extends AutoCloseable {
 
     @Nullable
-    InputStream getInputStream();
+    InputStream getStream();
 }

@@ -1,11 +1,11 @@
-package io.goodforgod.micronaut.swagger.api.service;
+package io.goodforgod.micronaut.openapi.service;
 
 
-import io.goodforgod.micronaut.swagger.api.config.SwaggerConfig;
-import io.goodforgod.micronaut.swagger.api.model.InputStreamResource;
-import io.goodforgod.micronaut.swagger.api.model.Resource;
-import io.goodforgod.micronaut.swagger.api.model.URIResource;
-import io.goodforgod.micronaut.swagger.api.utils.ResourceUtils;
+import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
+import io.goodforgod.micronaut.openapi.model.BufferedResource;
+import io.goodforgod.micronaut.openapi.model.Resource;
+import io.goodforgod.micronaut.openapi.model.URIResource;
+import io.goodforgod.micronaut.openapi.utils.ResourceUtils;
 import io.micronaut.core.util.CollectionUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -16,12 +16,12 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-import reactor.core.publisher.Mono;
 
 
 /**
@@ -29,75 +29,64 @@ import reactor.core.publisher.Mono;
  * @since 20.9.2020
  */
 @Singleton
-public class SwaggerLoader {
+public class OpenAPIProvider {
 
-    private static final String SWAGGER_DIR = "META-INF/swagger";
-    private static final String SWAGGER_MERGED = "swagger-merged.yml";
+    private static final String DEFAULT_DIR = "META-INF/swagger";
+    private static final String MERGED_FILE = "openapi-merged.yml";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Collection<Resource> cachedResources = null;
     private Resource merged = null;
 
-    private final SwaggerConfig config;
+    private final OpenAPIConfig config;
     private final YamlMerger yamlMerger;
 
     @Inject
-    public SwaggerLoader(SwaggerConfig config, YamlMerger yamlMerger) {
+    public OpenAPIProvider(OpenAPIConfig config, YamlMerger yamlMerger) {
         this.config = config;
         this.yamlMerger = yamlMerger;
     }
 
     /**
-     * @return swagger resource as specified per configuration
-     */
-    public Mono<Resource> getSwagger() {
-        return config.isMerge()
-                ? getMergedSwagger()
-                : getFirstSwagger();
-    }
-
-    /**
      * @return current service resource
      */
-    public Mono<Resource> getFirstSwagger() {
-        return getSwaggers().stream().findFirst()
-                .map(Mono::just)
-                .orElse(Mono.empty());
+    public Optional<Resource> getAny() {
+        return getAll().stream().findFirst();
     }
 
     /**
      * @return merged swagger in there are any to merge
      */
-    public Mono<Resource> getMergedSwagger() {
+    public Optional<Resource> getMerged() {
         if (merged != null) {
-            return Mono.just(merged);
+            return Optional.of(merged);
         }
 
-        final Collection<Resource> resources = getSwaggers();
+        final Collection<Resource> resources = getAll();
         if (CollectionUtils.isEmpty(resources)) {
             logger.debug("No swagger files found for merging");
-            return Mono.empty();
+            return Optional.empty();
         }
 
         if (resources.size() == 1) {
             logger.debug("Found 1 swagger file, merge is not required");
             final Resource resource = resources.iterator().next();
-            return Mono.just(resource);
+            return Optional.of(resource);
         }
 
         final Map<Object, Object> mergedYaml = yamlMerger.merge(resources);
         if (CollectionUtils.isEmpty(mergedYaml)) {
             logger.debug("Merged swagger file is empty");
-            return Mono.empty();
+            return Optional.empty();
         }
 
         try {
-            final Resource resource = getFileResource(mergedYaml);
-            return Mono.just(resource);
+            final Resource resource = getYamlAsResource(mergedYaml);
+            return Optional.of(resource);
         } catch (Exception e) {
             final Resource directResource = getDirectResource(mergedYaml);
-            return Mono.just(directResource);
+            return Optional.of(directResource);
         }
     }
 
@@ -105,14 +94,21 @@ public class SwaggerLoader {
      * @param yaml file to dump to file as merged one to cache it
      * @return resource with dumped merged YAML file
      */
-    private Resource getFileResource(@NotNull Map<Object, Object> yaml) {
-        logger.debug("Merged swagger file written to: {}", SWAGGER_MERGED);
-        try (final Writer writer = new BufferedWriter(new FileWriter(SWAGGER_MERGED))) {
+    private Resource getYamlAsResource(@NotNull Map<Object, Object> yaml) {
+        logger.debug("Writing OpenAPI file to: {}", MERGED_FILE);
+        try (final Writer writer = new BufferedWriter(new FileWriter(MERGED_FILE))) {
             new Yaml().dump(yaml, writer);
-            this.merged = URIResource.of(new URI(SWAGGER_MERGED));
+            this.merged = URIResource.of(new URI(MERGED_FILE));
             return merged;
         } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
+            try (final StringWriter writer = new StringWriter()) {
+                new Yaml().dump(yaml, writer);
+                final String value = writer.toString();
+                this.merged = BufferedResource.of(value);
+                return merged;
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(e.getMessage());
+            }
         }
     }
 
@@ -122,19 +118,21 @@ public class SwaggerLoader {
      */
     private Resource getDirectResource(@NotNull Map<Object, Object> yaml) {
         logger.debug("Dumping file directly to input stream");
-        final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        try (final Writer writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
-            new Yaml().dump(yaml, writer);
-            return InputStreamResource.of(new BufferedInputStream(new ByteArrayInputStream(stream.toByteArray())));
+        try (final ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            try (final Writer writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
+                new Yaml().dump(yaml, writer);
+                final String value = stream.toString(StandardCharsets.UTF_8);
+                return BufferedResource.of(value);
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
     }
 
     /**
-     * @return get swaggers as resources
+     * @return get all OpenAPI files as resources
      */
-    public Collection<Resource> getSwaggers() {
+    public Collection<Resource> getAll() {
         if (cachedResources != null) {
             return cachedResources;
         }
@@ -143,9 +141,9 @@ public class SwaggerLoader {
             return config.getInclude().stream()
                     .map(path -> {
                         try {
-                            final URL resource = SwaggerLoader.class.getResource(path);
+                            final URL resource = OpenAPIProvider.class.getResource(path);
                             if (resource == null) {
-                                throw new IllegalArgumentException("Swagger not found: " + path);
+                                throw new IllegalArgumentException("OpenAPI not found: " + path);
                             }
 
                             return resource.toURI();
@@ -156,9 +154,9 @@ public class SwaggerLoader {
                     .map(URIResource::of)
                     .collect(Collectors.toList());
         } else {
-            this.cachedResources = ResourceUtils.getResources(SWAGGER_DIR, p -> p.endsWith(".yml") || p.endsWith(".yaml"))
+            this.cachedResources = ResourceUtils.getResources(DEFAULT_DIR, p -> p.endsWith(".yml") || p.endsWith(".yaml"))
                     .stream()
-                    .filter(r -> config.getExclude().stream().noneMatch(excluded -> r.getUri().getPath().endsWith(excluded)))
+                    .filter(r -> config.getExclude().stream().noneMatch(excluded -> r.getURI().getPath().endsWith(excluded)))
                     .collect(Collectors.toList());
         }
 
