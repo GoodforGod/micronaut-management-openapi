@@ -24,7 +24,7 @@ micronaut {
         incremental(true)
         module(project.name)
         group(project.group)
-        annotations "io.goodforgod.micronaut.openapi.*"
+        annotations("io.goodforgod.micronaut.*")
     }
 }
 
