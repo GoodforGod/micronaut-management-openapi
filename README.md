@@ -1,9 +1,9 @@
 # Micronaut Swagger API
 
-![Java CI](https://github.com/GoodforGod/micronaut-swagger-api/workflows/Java%20CI/badge.svg)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-swagger-api&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-swagger-api&metric=coverage)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-swagger-api&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
+![Java CI](https://github.com/GoodforGod/micronaut-management-openapi/workflows/Java%20CI/badge.svg)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=coverage)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
 
 This project provides out-of-box *user-friendly* integration for *merging Swaggers* (OpenAPI also), exposing *Swagger & Swagger-UI HTTP* endpoints.
 
@@ -16,27 +16,27 @@ Library ships ready for *Micronaut 2*.
 **Gradle**
 ```groovy
 dependencies {
-    compile 'com.github.goodforgod:micronaut-swagger-api:1.0.1'
+    implementation "io.goodforgod:micronaut-management-openapi:0.9.0"
 }
 ```
 
 **Maven**
 ```xml
 <dependency>
-    <groupId>com.github.goodforgod</groupId>
-    <artifactId>micronaut-swagger-api</artifactId>
-    <version>1.0.0</version>
+    <groupId>io.goodforgod</groupId>
+    <artifactId>micronaut-management-openapi</artifactId>
+    <version>0.9.0</version>
 </dependency>
 ```
 
 ## Endpoints
 
-Library provide exposure for statis resources:
-- **/swagger** - Endpoint for exposing merged [Swagger](https://swagger.io/docs/specification/basic-structure/) (if there are any to merge) as static resource.
+Library provide exposure for static resources:
+- **/openapi** - Endpoint for exposing merged [Swagger](https://swagger.io/docs/specification/basic-structure/) (if there are any to merge) as static resource.
 - **/swagger-ui** - Endpoint for exposing [Swagger UI](https://petstore.swagger.io/) page resource.
 - **/rapidoc** - Endpoint for exposing [Rapidoc](https://mrin9.github.io/RapiDoc/examples/example2.html) page resource.
 
-## Swagger
+## OpenAPI 
 
 Library only exposes *Swagger* files, not generating them, so you need to generate 
 Swagger for your service first and library will help with its exposure.
