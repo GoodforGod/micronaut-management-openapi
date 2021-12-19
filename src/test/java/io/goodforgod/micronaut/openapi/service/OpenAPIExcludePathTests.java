@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
  * @author Anton Kurako (GoodforGod)
  * @since 25.9.2020
  */
-@MicronautTest(propertySources = "classpath:application-exclude.yml")
-class SwaggerExcludeLoaderTests extends Assertions {
+@MicronautTest(propertySources = "classpath:application-exclude-filepath.yml")
+class OpenAPIExcludePathTests extends Assertions {
 
     @Inject
     private OpenAPIProvider loader;
@@ -23,8 +23,8 @@ class SwaggerExcludeLoaderTests extends Assertions {
     private OpenAPIConfig config;
 
     @Test
-    void noSwaggersPresent() {
-        final String fileName = "swagger.yml";
+    void FilePathsNotPresent() {
+        final String fileName = "META-INF/swagger/swagger.yml";
         assertTrue(config.getExclude().contains(fileName));
 
         final Optional<Resource> resource = loader.getMerged();

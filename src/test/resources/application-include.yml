@@ -6,6 +6,5 @@ micronaut:
 openapi:
   enabled: true
   merge: true
-  exclude:
-  - swagger.yml
-  - mock/swagger.yml
+  include:
+    - META-INF/swagger/swagger.yml
