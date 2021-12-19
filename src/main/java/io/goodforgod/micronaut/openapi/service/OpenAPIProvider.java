@@ -2,16 +2,12 @@ package io.goodforgod.micronaut.openapi.service;
 
 
 import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
-import io.goodforgod.micronaut.openapi.model.BufferedResource;
-import io.goodforgod.micronaut.openapi.model.Resource;
-import io.goodforgod.micronaut.openapi.model.URLResource;
+import io.goodforgod.micronaut.openapi.model.*;
 import io.goodforgod.micronaut.openapi.utils.ResourceUtils;
 import io.micronaut.core.util.CollectionUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.*;
-import java.net.URI;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -81,7 +77,7 @@ public class OpenAPIProvider {
         }
 
         try {
-            final Resource fileResource = getYamlAsURIResource(mergedYaml);
+            final Resource fileResource = getYamlAsFileResource(mergedYaml);
             this.merged = fileResource;
             return Optional.of(fileResource);
         } catch (Exception e) {
@@ -95,11 +91,13 @@ public class OpenAPIProvider {
      * @param yaml file to dump to file as merged one to cache it
      * @return resource with dumped merged YAML file
      */
-    private Resource getYamlAsURIResource(@NotNull Map<Object, Object> yaml) {
-        logger.debug("Writing OpenAPI file to: {}", MERGED_FILE);
-        try (final Writer writer = new BufferedWriter(new FileWriter(MERGED_FILE))) {
+    private Resource getYamlAsFileResource(@NotNull Map<Object, Object> yaml) {
+        logger.debug("Trying writing OpenAPI file to: {}", MERGED_FILE);
+        final File file = new File(MERGED_FILE);
+        try (final Writer writer = new BufferedWriter(new FileWriter(file))) {
             new Yaml().dump(yaml, writer);
-            return URLResource.of(new URI(MERGED_FILE).toURL());
+            logger.debug("OpenAPI file written to: {}", MERGED_FILE);
+            return FileResource.of(file);
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage());
         }
@@ -130,7 +128,7 @@ public class OpenAPIProvider {
 
         if (!openAPIConfig.getInclude().isEmpty()) {
             return openAPIConfig.getInclude().stream()
-                    .map(OpenAPIProvider::getDirectURIResource)
+                    .map(OpenAPIProvider::getDirectResource)
                     .collect(Collectors.toList());
         } else {
             final String directory = openAPIConfig.getDefaultDirectory();
@@ -143,20 +141,17 @@ public class OpenAPIProvider {
         }
     }
 
-    private static URLResource getDirectURIResource(String path) {
-        try {
-            URL resource = OpenAPIProvider.class.getResource(path);
-            if (resource == null) {
-                resource = OpenAPIProvider.class.getResource("/" + path);
-            }
-
-            if (resource == null) {
+    private static Resource getDirectResource(String path) {
+        InputStream stream = OpenAPIProvider.class.getClassLoader().getResourceAsStream(path);
+        if (stream == null) {
+            stream = OpenAPIProvider.class.getClassLoader().getResourceAsStream("/" + path);
+            if (stream == null) {
                 throw new IllegalArgumentException("OpenAPI can't be read: " + path);
+            } else {
+                return DirectResource.of("/" + path);
             }
-
-            return URLResource.of(resource);
-        } catch (Exception e) {
-            throw new IllegalArgumentException("OpenAPI can't be read: " + path);
+        } else {
+            return DirectResource.of(path);
         }
     }
 }

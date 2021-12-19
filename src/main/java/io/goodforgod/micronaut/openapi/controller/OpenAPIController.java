@@ -64,7 +64,7 @@ public class OpenAPIController {
             throw new HttpStatusException(HttpStatus.NOT_FOUND, "Can't find OpenAPI file");
         } else if (openapi.get() instanceof FileResource) {
             final File file = ((FileResource) openapi.get()).getFile();
-            logger.debug("Streaming file for path: {}", file);
+            logger.debug("Streaming file with path: {}", file);
             return new SystemFile(file, MEDIA_TYPE);
         } else {
             final InputStream inputStream = openapi.get().getStream();

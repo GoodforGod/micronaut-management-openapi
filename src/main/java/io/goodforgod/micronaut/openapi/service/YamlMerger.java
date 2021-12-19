@@ -50,9 +50,9 @@ public class YamlMerger {
             if (inputStream == null) {
                 if (resource instanceof URLResource) {
                     throw new IllegalArgumentException(
-                            "Swagger can't be loaded as resource from path:" + ((URLResource) resource).getURL());
+                            "OpenAPI can't be loaded from path: " + ((URLResource) resource).getURL());
                 } else {
-                    throw new IllegalArgumentException("Swagger can't be loaded as resource");
+                    throw new IllegalArgumentException("OpenAPI can't be loaded");
                 }
             }
 

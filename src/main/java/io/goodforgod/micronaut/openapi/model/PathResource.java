@@ -18,9 +18,10 @@ public interface PathResource extends Resource {
     @Override
     default @Nullable InputStream getStream() {
         final String path = getPath();
-        final InputStream stream = getClass().getClassLoader().getResourceAsStream(path);
+        final ClassLoader classLoader = getClass().getClassLoader();
+        final InputStream stream = classLoader.getResourceAsStream(path);
         return (stream == null)
-                ? getClass().getClassLoader().getResourceAsStream("/" + path)
+                ? classLoader.getResourceAsStream("/" + path)
                 : stream;
     }
 }
