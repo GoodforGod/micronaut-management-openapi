@@ -28,7 +28,7 @@ public class OpenAPIProvider {
 
     private static final String MERGED_FILE = "openapi-merged.yml";
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final Logger logger = LoggerFactory.getLogger(OpenAPIProvider.class);
 
     private Collection<Resource> cachedResources = null;
     private Resource merged = null;
@@ -64,7 +64,7 @@ public class OpenAPIProvider {
         }
 
         if (resources.size() == 1) {
-            logger.debug("Found 1 swagger file, merge is not required");
+            logger.debug("Found '1' swagger file, merge is not required");
             final Resource resource = resources.iterator().next();
             return Optional.of(resource);
         }
@@ -127,7 +127,7 @@ public class OpenAPIProvider {
         }
 
         if (!openAPIConfig.getInclude().isEmpty()) {
-            return openAPIConfig.getInclude().stream()
+            this.cachedResources = openAPIConfig.getInclude().stream()
                     .map(OpenAPIProvider::getDirectResource)
                     .collect(Collectors.toList());
         } else {
@@ -137,11 +137,14 @@ public class OpenAPIProvider {
                     .stream()
                     .filter(r -> exclude.stream().noneMatch(ex -> r.getPath().endsWith(ex)))
                     .collect(Collectors.toList());
-            return cachedResources;
         }
+
+        logger.debug("Caching '{}' resources", cachedResources.size());
+        return cachedResources;
     }
 
-    private static Resource getDirectResource(String path) {
+    private static Resource getDirectResource(@NotNull String path) {
+        logger.debug("Loading resource as direct for path: {}", path);
         InputStream stream = OpenAPIProvider.class.getClassLoader().getResourceAsStream(path);
         if (stream == null) {
             stream = OpenAPIProvider.class.getClassLoader().getResourceAsStream("/" + path);
