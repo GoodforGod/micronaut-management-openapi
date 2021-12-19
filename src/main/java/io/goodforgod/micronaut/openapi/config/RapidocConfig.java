@@ -2,6 +2,7 @@ package io.goodforgod.micronaut.openapi.config;
 
 
 import io.goodforgod.micronaut.openapi.OpenAPISettings;
+import io.goodforgod.micronaut.openapi.controller.RapidocController;
 import io.micronaut.context.annotation.ConfigurationProperties;
 
 
@@ -15,7 +16,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 public class RapidocConfig {
 
     /**
-     * Enable Rapidoc exposure
+     * Enable Rapidoc exposure {@link RapidocController}
      */
     private boolean enabled = false;
 

@@ -27,7 +27,7 @@ public class OpenAPIConfig {
     private boolean enabled = true;
 
     /**
-     * Allow merging multiple swaggers into one
+     * Allow merging multiple OpenAPI files into one
      */
     private boolean merge = false;
 
@@ -44,12 +44,12 @@ public class OpenAPIConfig {
     private String defaultDirectory = OpenAPISettings.DEFAULT_DIR;
 
     /**
-     * Exclude listed swagger files (if {@link #include} is not specified)
+     * Exclude listed OpenAPI files (if {@link #include} is not specified)
      */
     private Set<String> exclude;
 
     /**
-     * Include only listed swagger files (ignores {@link #exclude})
+     * Include only listed OpenAPI files (ignores {@link #exclude})
      */
     private Set<String> include;
 

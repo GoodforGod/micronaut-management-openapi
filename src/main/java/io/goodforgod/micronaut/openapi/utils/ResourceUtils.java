@@ -79,7 +79,7 @@ public final class ResourceUtils {
             }
         } catch (IOException | URISyntaxException e) {
             final String filePath = "/" + path;
-            logger.debug("Can not open JAR file, looking for files outside JAR with path: {}", filePath);
+            logger.debug("Can't open JAR file, looking for files outside JAR with path: {}", filePath);
 
             final URL resource = ResourceUtils.class.getResource(filePath);
             if (resource == null) {
@@ -88,7 +88,7 @@ public final class ResourceUtils {
 
             final File[] files = new File(resource.getPath()).listFiles();
             if (ArrayUtils.isEmpty(files)) {
-                logger.debug("No swaggers found outside JAR with path: {}", filePath);
+                logger.debug("No files found outside JAR with path: {}", filePath);
                 return Collections.emptyList();
             }
 

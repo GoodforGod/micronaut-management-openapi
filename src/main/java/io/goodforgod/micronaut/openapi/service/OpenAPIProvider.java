@@ -50,7 +50,7 @@ public class OpenAPIProvider {
     }
 
     /**
-     * @return merged swagger in there are any to merge
+     * @return merged OpenAPI
      */
     public Optional<Resource> getMerged() {
         if (merged != null) {
@@ -59,12 +59,12 @@ public class OpenAPIProvider {
 
         final Collection<Resource> resources = getAll();
         if (CollectionUtils.isEmpty(resources)) {
-            logger.debug("No swagger files found for merging");
+            logger.debug("No OpenAPI files found for merging");
             return Optional.empty();
         }
 
         if (resources.size() == 1) {
-            logger.debug("Found '1' swagger file, merge is not required");
+            logger.debug("Found '1' OpenAPI file, merge is not required");
             final Resource resource = resources.iterator().next();
             return Optional.of(resource);
         }
@@ -72,7 +72,7 @@ public class OpenAPIProvider {
         logger.debug("Merging '{}' OpenAPI files into one...", resources.size());
         final Map<Object, Object> mergedYaml = yamlMerger.merge(resources);
         if (CollectionUtils.isEmpty(mergedYaml)) {
-            logger.debug("Merged swagger file is empty");
+            logger.debug("Merged OpenAPI file is empty");
             return Optional.empty();
         }
 
