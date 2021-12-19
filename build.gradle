@@ -1,152 +1,129 @@
 plugins {
-    id 'jacoco'
-    id 'java-library'
-    id 'maven-publish'
+    id "jacoco"
+    id "maven-publish"
 
-    id 'org.sonarqube' version '3.0'
-    id 'com.diffplug.gradle.spotless' version '4.4.0'
+    id "io.micronaut.library" version "3.0.0"
+    id "org.sonarqube" version "3.3"
+    id "com.diffplug.spotless" version "6.0.4"
 }
 
 repositories {
     mavenLocal()
     mavenCentral()
-    jcenter()
 }
 
 group = groupId
 version = artifactVersion
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+micronaut {
+    version("3.2.3")
+    processing {
+        incremental(true)
+        module(project.name)
+        group(project.group)
+        annotations("io.goodforgod.micronaut.openapi.*")
+    }
+}
+
+dependencies {
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+
+    compileOnly "io.micronaut:micronaut-inject-java"
+    compileOnly "io.swagger.core.v3:swagger-annotations"
+    compileOnly "io.micronaut:micronaut-http-server"
+
+    implementation "org.jetbrains:annotations:22.0.0"
+
+    testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+    testAnnotationProcessor "io.micronaut.openapi:micronaut-openapi"
+
+    testImplementation "io.micronaut:micronaut-http-client"
+    testImplementation "io.micronaut.test:micronaut-test-core"
+    testImplementation "io.micronaut.test:micronaut-test-junit5"
+    testCompileOnly "io.swagger.core.v3:swagger-annotations"
+
+    testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
+    testRuntimeOnly "ch.qos.logback:logback-classic:1.2.8"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+    testImplementation "org.junit.jupiter:junit-jupiter-api"
+    testImplementation "org.junit.jupiter:junit-jupiter-params"
+}
+
+test {
+    failFast(false)
+    useJUnitPlatform()
+    testLogging {
+        showStandardStreams(false)
+        events("passed", "skipped", "failed")
+        exceptionFormat("full")
+    }
+
+    environment([
+            "SECURITY_ENABLED": "false",
+    ])
+
+    reports {
+        html.enabled(false)
+        junitXml.enabled(false)
+    }
+}
 
 spotless {
     java {
-        encoding 'UTF-8'
+        encoding("UTF-8")
+        importOrder()
         removeUnusedImports()
-        eclipse().configFile "${projectDir}/config/codestyle.xml"
+        eclipse("4.21.0").configFile("${projectDir}/config/codestyle.xml")
     }
 }
 
 sonarqube {
     properties {
-        property 'sonar.host.url', 'https://sonarcloud.io'
-        property 'sonar.organization', 'goodforgod'
-        property 'sonar.projectKey', 'GoodforGod_micronaut-swagger-api'
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.organization", "goodforgod"
+        property "sonar.projectKey", "GoodforGod_micronaut-management-openapi"
     }
-}
-
-configurations {
-    all {
-        resolutionStrategy {
-            cacheChangingModulesFor(1000, 'seconds') // check for updates every build
-        }
-    }
-    micronautBom
-    compileOnly.extendsFrom(micronautBom)
-    implementation.extendsFrom(micronautBom)
-    annotationProcessor.extendsFrom(micronautBom)
-    testAnnotationProcessor.extendsFrom(micronautBom)
-}
-
-dependencies {
-    micronautBom enforcedPlatform('io.micronaut:micronaut-bom:2.0.3')
-
-    annotationProcessor 'io.micronaut:micronaut-inject-java'
-
-    compileOnly 'io.swagger.core.v3:swagger-annotations'
-
-    implementation 'org.jetbrains:annotations:20.1.0'
-    implementation 'io.micronaut:micronaut-http-server-netty'
-
-    testAnnotationProcessor 'io.micronaut:micronaut-inject-java'
-    testAnnotationProcessor 'io.micronaut.configuration:micronaut-openapi'
-
-    testImplementation 'io.micronaut:micronaut-http-client'
-    testImplementation 'io.micronaut.test:micronaut-test-core'
-    testImplementation 'io.micronaut.test:micronaut-test-junit5'
-    testCompileOnly 'io.swagger.core.v3:swagger-annotations'
-
-    testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.3'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testImplementation 'org.junit.jupiter:junit-jupiter-params'
-}
-
-test {
-    useJUnitPlatform()
-    testLogging {
-        events "passed", "skipped", "failed"
-        exceptionFormat "full"
-    }
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-    options.incremental = true
-    options.fork = true
-}
-
-javadoc {
-    options.encoding = "UTF-8"
-    if (JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier = 'sources'
-}
-
-task javadocJar(type: Jar) {
-    from javadoc
-    archiveClassifier = 'javadoc'
-}
-
-tasks.withType(Test) {
-    reports.html.enabled = false
-    reports.junitXml.enabled = false
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifact sourcesJar
-            artifact javadocJar
 
             pom {
-                name = 'Micronaut Swagger API'
-                url = 'https://github.com/GoodforGod/micronaut-swagger-api'
-                description = 'Project provides user-friendly integration for merging, exposing Swagger/OpenAPI files.'
+                name = "Micronaut Management OpenAPI"
+                url = "https://github.com/GoodforGod/$artifactId"
+                description = "Library provides Micronaut cloud-friendly OpenAPI/Swagger-UI/Rapidoc management endpoints."
 
                 license {
-                    name = 'Apache License 2.0'
-                    url = 'https://github.com/GoodforGod/micronaut-swagger-api/blob/master/LICENSE'
-                    distribution = 'repo'
+                    name = "Apache License 2.0"
+                    url = "https://github.com/GoodforGod/$artifactId/blob/master/LICENSE"
+                    distribution = "repo"
                 }
 
                 developer {
-                    id = 'GoodforGod'
-                    name = 'Anton Kurako'
-                    email = 'goodforgod.dev@gmail.com'
-                    url = 'https://github.com/GoodforGod'
+                    id = "GoodforGod"
+                    name = "Anton Kurako"
+                    email = "goodforgod.dev@gmail.com"
+                    url = "https://github.com/GoodforGod"
                 }
 
                 scm {
-                    connection = 'scm:git:git://github.com/GoodforGod/micronaut-swagger-api.git'
-                    developerConnection = 'scm:git:ssh://GoodforGod/micronaut-swagger-api.git'
-                    url = 'https://github.com/GoodforGod/micronaut-swagger-api/tree/master'
+                    connection = "scm:git:git://github.com/GoodforGod/${artifactId}.git"
+                    developerConnection = "scm:git:ssh://GoodforGod/${artifactId}.git"
+                    url = "https://github.com/GoodforGod/$artifactId/tree/master"
                 }
             }
         }
     }
-
     repositories {
         maven {
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
                 username System.getenv("OSS_USERNAME")
                 password System.getenv("OSS_PASSWORD")
@@ -155,21 +132,34 @@ publishing {
     }
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding("UTF-8")
+    options.incremental(true)
+    options.fork = true
 }
 
 check.dependsOn jacocoTestReport
 jacocoTestReport {
     reports {
-        xml.enabled true
-        html.destination file("${buildDir}/jacocoHtml")
+        xml.enabled(true)
+        html.outputLocation = layout.buildDirectory.dir("jacocoHtml")
+    }
+}
+
+javadoc {
+    options.encoding = "UTF-8"
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption("html5", true)
     }
 }
 
 if (project.hasProperty("signing.keyId")) {
-    apply plugin: 'signing'
+    apply plugin: "signing"
     signing {
         sign publishing.publications.mavenJava
     }

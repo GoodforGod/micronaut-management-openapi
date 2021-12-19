@@ -1,0 +1,10 @@
+micronaut:
+  security:
+    enabled: false
+
+
+openapi:
+  enabled: true
+  merge: true
+  exclude:
+    - swagger.yml
