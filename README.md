@@ -1,17 +1,25 @@
-# Micronaut Swagger API
+# Micronaut Management OpenAPI
 
 ![Java CI](https://github.com/GoodforGod/micronaut-management-openapi/workflows/Java%20CI/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=coverage)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-arangodb)
 
-This project provides out-of-box *user-friendly* integration for *merging Swaggers* (OpenAPI also), exposing *Swagger & Swagger-UI HTTP* endpoints.
+Library provides Micronaut *cloud-friendly* OpenAPI/Swagger-UI/Rapidoc management endpoints.
+
+Features:
+- Cloud-friendly, optimized for file streaming OpenAPI/Swagger-UI/Rapidoc endpoints.
+- Merging multiple OpenAPI files into one.
+- OpenAPI exposure endpoint.
+- Swagger UI exposure endpoint.
+- Swagger UI Dark\Light theme.
+- Rapidoc exposure endpoint.
 
 ![](https://media.giphy.com/media/HNOzdIugRSx8FnDKWR/giphy.gif)
 
 ## Dependency :rocket:
 
-Library ships ready for *Micronaut 2*.
+Library ships for *Micronaut 3*.
 
 **Gradle**
 ```groovy
@@ -29,58 +37,81 @@ dependencies {
 </dependency>
 ```
 
-## Endpoints
+## OpenAPI Generation
 
-Library provide exposure for static resources:
-- **/openapi** - Endpoint for exposing [OpenAPI](https://swagger.io/docs/specification/basic-structure/) (if there are any to merge) as static resource.
-- **/swagger-ui** - Endpoint for exposing [Swagger UI](https://petstore.swagger.io/) page resource.
-- **/rapidoc** - Endpoint for exposing [Rapidoc](https://mrin9.github.io/RapiDoc/examples/example2.html) page resource.
+Library only exposes *OpenAPI* files, library **DOESN'T** generate them, so this is your responsibility to generate OpenAPI file.
 
-## OpenAPI 
-
-Library only exposes *Swagger* files, not generating them, so you need to generate 
-Swagger for your service first and library will help with its exposure.
-
-By adding to your Gradle dependencies (example):
+There is Micronaut OpenAPI generator, Gradle configuration:
 
 ```yaml
-annotationProcessor("io.micronaut.configuration:micronaut-openapi:2.1.0")
-implementation("io.swagger.core.v3:swagger-annotations")
+annotationProcessor("io.micronaut.configuration:micronaut-openapi:3.2.2")
+implementation("io.swagger.core.v3:swagger-annotations:2.1.11")
 ```
 
-Check [Micronaut official documentation](https://micronaut-projects.github.io/micronaut-openapi/latest/guide/index.html) for more information.
+More info about Micronaut OpenAPI generator [here in official documentation](https://micronaut-projects.github.io/micronaut-openapi/latest/guide/index.html).
+
+## Endpoints
+
+Library automatically *scan* for OpenAPI files inside JAR and expose them via OpenAPI endpoint.
+
+If *merge* is disabled then any first OpenAPI file will be exposed (according to *exclude* and *include* configuration).
+If *merge* is enabled then all suitable (according to *exclude* and *include* configuration) OpenAPI files will be merged into one.
+
+**/openapi** - Endpoint optimized for exposing [OpenAPI](https://spec.openapis.org/oas/v3.1.0) file.
+
+**/swagger-ui** - Endpoint optimized for exposing [Swagger UI](https://petstore.swagger.io/) file.
+
+Swagger UI have **Light\Dark** theme switch.
+
+**/rapidoc** - Endpoint optimized for exposing [Rapidoc](https://mrin9.github.io/RapiDoc/examples/example2.html) file.
 
 ## Configuration
 
-Library provides out-of-box */swagger (merge enabled), /swagger-ui, /rapidoc* endpoints.
+Most of the settings are *cloud-friendly* by default.
 
-There is ability to easily merge multiple Swagger files via simple configuration property.
-
-Other settings are available to configure for service, 
-however most of them are default for *user-friendly* bootstrap just by adding library as dependency.
+Just by adding this library as dependency you are ready to go.
 
 ```yaml
-swagger:
-  enabled: true       // enalbed Swagger YAML exposing via HTTP endpoint  (default - true)
-  merge: true         // enabled merging swaggers under META-INF/swagger  (default - true)
-  exclude:            // Exclude from merge swaggers under META-INF/swagger
-  - swagger-1.yml
-  - swagger-2.yml
-  path: /swagger      // path for Swagger HTTP endpoint                   (default - /swagger)
-  ui:
-    path: /swagger-ui // path for Swagger-UI HTTP endpoint                (default - /swagger-ui)
-    enalbed: true     // enalbed Swagger-UI exposing via HTTP endpoint    (default - true)
+openapi:
+  path: /openapi                        // path for OpenAPI endpoint                          (default - /openapi)
+  enabled: true                         // enalbed OpenAPI exposure                           (default - true)
+  merge: false                          // enable merging OpenAPI found in default-directory  (default - false)
+  default-directory: META-INF/swagger   // path inside JAR where to search OpenAPI            (default - META-INF/swagger)
+  exclude:                              // OpenAPI files to exclude from exposure             (path or filename)
+    - openapi-1.yml                     // Can be Path or filename
+    - META-INF/swagger/openapi-2.yml    // Can be Path or filename
+  include:                              // Include ONLY specified OpenAPI files for exposure  (path only)
+    - META-INF/swagger/openapi-3.yml    // Path to file inside JAR
+    - META-INF/swagger/openapi-4.yml    // Path to file inside JAR
+  
+  swagger-ui:
+    path: /swagger-ui                   // path for Swagger-UI endpoint                        (default - /swagger-ui)
+    enalbed: false                      // enalbed Swagger-UI exposure                         (default - false)
+  
   rapidoc:
-    path: /rapidoc    // path for Rapidoc HTTP endpoint                   (default - /rapidoc)
-    enalbed: true     // enalbed Rapidoc exposing via HTTP endpoint       (default - false) 
-
+    path: /rapidoc                      // path for Rapidoc endpoint                           (default - /rapidoc)
+    enalbed: false                      // enalbed Rapidoc exposure                            (default - false) 
 ```
 
-## Version History
+## Security
 
-**1.0.1** - UTF-8 charset for swagger correct output, internal changes.
+When you have security enabled and want to provide *non-auth* access for your OpenAPI/Swagger-UI/Rapodic endpoints here is configuration for such case:
 
-**1.0.0** - Initial version, with */swagger, /swagger-ui, /rapidoc* HTTP endpoint support.
+```yaml
+micronaut:
+  security:
+    intercept-url-map:
+      -
+        pattern: /openapi
+        http-method: GET
+        access:
+          - isAnonymous()
+      -
+        pattern: /swagger-ui
+        http-method: GET
+        access:
+          - isAnonymous()
+```
 
 ## License
 
