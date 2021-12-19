@@ -29,32 +29,32 @@
 # These files are binary and should be left untouched
 # (binary is a macro for -text -diff)
 # Archives
-*.7z            -text filter=lfs diff=lfs merge=lfs
-*.br            -text filter=lfs diff=lfs merge=lfs
-*.gz            -text filter=lfs diff=lfs merge=lfs
-*.tar           -text filter=lfs diff=lfs merge=lfs
-*.zip           -text filter=lfs diff=lfs merge=lfs
-*.jar           -text
-*.so            -text
-*.war           -text
-*.dll           -text
+*.7z            binary
+*.br            binary
+*.gz            binary
+*.tar           binary
+*.zip           binary
+*.jar           binary
+*.so            binary
+*.war           binary
+*.dll           binary
 
 # Documents
-*.pdf           -text filter=lfs diff=lfs merge=lfs
+*.pdf           binary
 
 # Images
-*.ico           -text filter=lfs diff=lfs merge=lfs
-*.gif           -text filter=lfs diff=lfs merge=lfs
-*.jpg           -text filter=lfs diff=lfs merge=lfs
-*.jpeg          -text filter=lfs diff=lfs merge=lfs
-*.png           -text filter=lfs diff=lfs merge=lfs
-*.psd           -text filter=lfs diff=lfs merge=lfs
-*.webp          -text filter=lfs diff=lfs merge=lfs
+*.ico           binary
+*.gif           binary
+*.jpg           binary
+*.jpeg          binary
+*.png           binary
+*.psd           binary
+*.webp          binary
 
 # Fonts
-*.woff2         -text filter=lfs diff=lfs merge=lfs
+*.woff2         binary
 
 # Other
-*.exe           -text filter=lfs diff=lfs merge=lfs
+*.exe           binary
 *.class         binary
 *.ear           binary
