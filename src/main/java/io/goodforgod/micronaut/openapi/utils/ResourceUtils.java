@@ -52,7 +52,7 @@ public final class ResourceUtils {
         try {
             final URL url = ResourceUtils.class.getClassLoader().getResource(path);
             if (url == null) {
-                throw new URISyntaxException("null", "URL is nullable");
+                throw new IllegalArgumentException("URL is nullable for path: " + path);
             }
 
             final String jarPath = url.getPath()
@@ -81,7 +81,7 @@ public final class ResourceUtils {
             final String filePath = "/" + path;
             logger.debug("Can not open JAR file, looking for files outside JAR with path: {}", filePath);
 
-            final URL resource = ResourceUtils.class.getResource(filePath);
+            final URL resource = ResourceUtils.class.getClassLoader().getResource(filePath);
             if (resource == null) {
                 return Collections.emptyList();
             }

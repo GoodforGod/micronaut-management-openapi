@@ -40,7 +40,7 @@ public class RapidocController {
     public RapidocController(OpenAPIConfig openAPIConfig,
                              RapidocConfig rapidocConfig,
                              ConversionService conversionService,
-                             @Value("${micronaut.application.name:Swagger UI}") String serviceName) {
+                             @Value("${micronaut.application.name:Service}") String serviceName) {
         this.resolvedValue = SupplierUtil.memoized(() -> {
             final String file = ResourceUtils.getFileAsString(RAPIDOC_PATH).orElse(StringUtils.EMPTY_STRING);
 
