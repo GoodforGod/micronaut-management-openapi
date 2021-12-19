@@ -4,16 +4,14 @@ package io.goodforgod.micronaut.openapi.service;
 import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
 import io.goodforgod.micronaut.openapi.model.BufferedResource;
 import io.goodforgod.micronaut.openapi.model.Resource;
-import io.goodforgod.micronaut.openapi.model.URIResource;
+import io.goodforgod.micronaut.openapi.model.URLResource;
 import io.goodforgod.micronaut.openapi.utils.ResourceUtils;
 import io.micronaut.core.util.CollectionUtils;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.*;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -75,6 +73,7 @@ public class OpenAPIProvider {
             return Optional.of(resource);
         }
 
+        logger.debug("Merging '{}' OpenAPI files into one...", resources.size());
         final Map<Object, Object> mergedYaml = yamlMerger.merge(resources);
         if (CollectionUtils.isEmpty(mergedYaml)) {
             logger.debug("Merged swagger file is empty");
@@ -82,11 +81,13 @@ public class OpenAPIProvider {
         }
 
         try {
-            final Resource resource = getYamlAsResource(mergedYaml);
-            return Optional.of(resource);
+            final Resource fileResource = getYamlAsURIResource(mergedYaml);
+            this.merged = fileResource;
+            return Optional.of(fileResource);
         } catch (Exception e) {
-            final Resource directResource = getDirectResource(mergedYaml);
-            return Optional.of(directResource);
+            final Resource bufferedResource = getYamlAsBufferedResource(mergedYaml);
+            this.merged = bufferedResource;
+            return Optional.of(bufferedResource);
         }
     }
 
@@ -94,38 +95,28 @@ public class OpenAPIProvider {
      * @param yaml file to dump to file as merged one to cache it
      * @return resource with dumped merged YAML file
      */
-    private Resource getYamlAsResource(@NotNull Map<Object, Object> yaml) {
+    private Resource getYamlAsURIResource(@NotNull Map<Object, Object> yaml) {
         logger.debug("Writing OpenAPI file to: {}", MERGED_FILE);
         try (final Writer writer = new BufferedWriter(new FileWriter(MERGED_FILE))) {
             new Yaml().dump(yaml, writer);
-            this.merged = URIResource.of(new URI(MERGED_FILE));
-            return merged;
+            return URLResource.of(new URI(MERGED_FILE).toURL());
         } catch (Exception e) {
-            try (final StringWriter writer = new StringWriter()) {
-                new Yaml().dump(yaml, writer);
-                final String value = writer.toString();
-                this.merged = BufferedResource.of(value);
-                return merged;
-            } catch (Exception ex) {
-                throw new IllegalArgumentException(e.getMessage());
-            }
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
     /**
      * @param yaml to dump directly to inputStream
-     * @return resource with YAML as direct inputStream
+     * @return resource with YAML as direct buffered resource
      */
-    private Resource getDirectResource(@NotNull Map<Object, Object> yaml) {
-        logger.debug("Dumping file directly to input stream");
-        try (final ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-            try (final Writer writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
-                new Yaml().dump(yaml, writer);
-                final String value = stream.toString(StandardCharsets.UTF_8);
-                return BufferedResource.of(value);
-            }
+    private Resource getYamlAsBufferedResource(@NotNull Map<Object, Object> yaml) {
+        logger.debug("Writing OpenAPI file to BufferedResource");
+        try (final StringWriter writer = new StringWriter()) {
+            new Yaml().dump(yaml, writer);
+            final String value = writer.toString();
+            return BufferedResource.of(value);
         } catch (Exception e) {
-            throw new IllegalArgumentException(e.getMessage());
+            throw new IllegalStateException(e.getMessage());
         }
     }
 
@@ -139,28 +130,33 @@ public class OpenAPIProvider {
 
         if (!openAPIConfig.getInclude().isEmpty()) {
             return openAPIConfig.getInclude().stream()
-                    .map(path -> {
-                        try {
-                            final URL resource = OpenAPIProvider.class.getResource(path);
-                            if (resource == null) {
-                                throw new IllegalArgumentException("OpenAPI not found: " + path);
-                            }
-
-                            return resource.toURI();
-                        } catch (URISyntaxException e) {
-                            throw new IllegalArgumentException(e.getMessage());
-                        }
-                    })
-                    .map(URIResource::of)
+                    .map(OpenAPIProvider::getDirectURIResource)
                     .collect(Collectors.toList());
         } else {
             final String directory = openAPIConfig.getDefaultDirectory();
             final Set<String> exclude = openAPIConfig.getExclude();
             this.cachedResources = ResourceUtils.getResources(directory, p -> p.endsWith(".yml") || p.endsWith(".yaml"))
                     .stream()
-                    .filter(r -> exclude.stream().noneMatch(ex -> r.getURI().getPath().endsWith(ex)))
+                    .filter(r -> exclude.stream().noneMatch(ex -> r.getPath().endsWith(ex)))
                     .collect(Collectors.toList());
             return cachedResources;
+        }
+    }
+
+    private static URLResource getDirectURIResource(String path) {
+        try {
+            URL resource = OpenAPIProvider.class.getResource(path);
+            if (resource == null) {
+                resource = OpenAPIProvider.class.getResource("/" + path);
+            }
+
+            if (resource == null) {
+                throw new IllegalArgumentException("OpenAPI can't be read: " + path);
+            }
+
+            return URLResource.of(resource);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("OpenAPI can't be read: " + path);
         }
     }
 }

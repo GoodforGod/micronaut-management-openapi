@@ -1,6 +1,7 @@
 package io.goodforgod.micronaut.openapi.model;
 
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -25,12 +26,9 @@ public final class BufferedResource implements Resource {
         return new BufferedResource(value);
     }
 
-    /**
-     * @return resource input stream
-     */
     @Override
     public @NotNull InputStream getStream() {
-        return new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8));
+        return new BufferedInputStream(new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8)));
     }
 
     public String getValue() {

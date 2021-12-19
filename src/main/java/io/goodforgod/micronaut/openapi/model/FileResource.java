@@ -1,7 +1,7 @@
 package io.goodforgod.micronaut.openapi.model;
 
 
-import java.net.URI;
+import java.io.File;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -11,25 +11,25 @@ import org.jetbrains.annotations.NotNull;
  * @author Anton Kurako (GoodforGod)
  * @since 18.12.2021
  */
-public final class URIResource implements PathResource {
+public final class FileResource implements PathResource {
 
-    private final URI uri;
+    private final File file;
 
-    private URIResource(URI uri) {
-        this.uri = uri;
+    private FileResource(File file) {
+        this.file = file;
     }
 
-    public static URIResource of(@NotNull URI uri) {
-        return new URIResource(uri);
+    public static FileResource of(@NotNull File file) {
+        return new FileResource(file);
     }
 
-    public URI getURI() {
-        return uri;
+    public File getFile() {
+        return file;
     }
 
     @Override
     public @NotNull String getPath() {
-        return uri.getPath();
+        return file.toURI().getPath();
     }
 
     @Override

@@ -2,7 +2,7 @@ plugins {
     id "jacoco"
     id "maven-publish"
 
-    id "io.micronaut.library" version "3.0.0"
+    id "io.micronaut.library" version "3.0.1"
     id "org.sonarqube" version "3.3"
     id "com.diffplug.spotless" version "6.0.4"
 }
@@ -24,7 +24,7 @@ micronaut {
         incremental(true)
         module(project.name)
         group(project.group)
-        annotations("io.goodforgod.micronaut.*")
+        annotations("io.goodforgod.micronaut.openapi.*")
     }
 }
 
@@ -94,9 +94,9 @@ publishing {
             from components.java
 
             pom {
-                name = "Micronaut Swagger API"
+                name = "Micronaut Management OpenAPI"
                 url = "https://github.com/GoodforGod/$artifactId"
-                description = "Project provides user-friendly integration for merging, exposing Swagger/OpenAPI files."
+                description = "Library provides Micronaut cloud-friendly OpenAPI/Swagger-UI/Rapidoc management endpoints."
 
                 license {
                     name = "Apache License 2.0"

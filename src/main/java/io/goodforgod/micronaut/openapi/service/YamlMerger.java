@@ -3,7 +3,7 @@ package io.goodforgod.micronaut.openapi.service;
 
 import io.goodforgod.micronaut.openapi.model.BufferedResource;
 import io.goodforgod.micronaut.openapi.model.Resource;
-import io.goodforgod.micronaut.openapi.model.URIResource;
+import io.goodforgod.micronaut.openapi.model.URLResource;
 import io.micronaut.core.util.CollectionUtils;
 import jakarta.inject.Singleton;
 import java.io.InputStream;
@@ -48,11 +48,11 @@ public class YamlMerger {
         } else {
             final InputStream inputStream = resource.getStream();
             if (inputStream == null) {
-                if (resource instanceof URIResource) {
+                if (resource instanceof URLResource) {
                     throw new IllegalArgumentException(
-                            "Swagger can not be loaded as resource from path:" + ((URIResource) resource).getURI());
+                            "Swagger can't be loaded as resource from path:" + ((URLResource) resource).getURL());
                 } else {
-                    throw new IllegalArgumentException("Swagger can not be loaded as resource");
+                    throw new IllegalArgumentException("Swagger can't be loaded as resource");
                 }
             }
 

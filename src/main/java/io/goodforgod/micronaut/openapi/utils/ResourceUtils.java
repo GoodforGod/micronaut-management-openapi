@@ -1,6 +1,8 @@
 package io.goodforgod.micronaut.openapi.utils;
 
 
+import io.goodforgod.micronaut.openapi.model.FileResource;
+import io.goodforgod.micronaut.openapi.model.PathResource;
 import io.goodforgod.micronaut.openapi.model.URIResource;
 import io.micronaut.core.io.IOUtils;
 import io.micronaut.core.util.ArrayUtils;
@@ -9,7 +11,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.attribute.FileTime;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.jar.JarEntry;
@@ -36,7 +37,7 @@ public final class ResourceUtils {
      * @param path under which to look for resources
      * @return resources under given path
      */
-    public static List<URIResource> getResources(@NotNull String path) {
+    public static List<PathResource> getResources(@NotNull String path) {
         return getResources(path, p -> true);
     }
 
@@ -45,9 +46,9 @@ public final class ResourceUtils {
      * @param pathPredicate predicate to validate paths
      * @return resources under given path
      */
-    public static List<URIResource> getResources(@NotNull String path,
-                                                 @NotNull Predicate<String> pathPredicate) {
-        logger.debug("Looking for files inside JAR in path: {}", path);
+    public static List<PathResource> getResources(@NotNull String path,
+                                                  @NotNull Predicate<String> pathPredicate) {
+        logger.debug("Looking for files inside JAR with path: {}", path);
         try {
             final URL url = ResourceUtils.class.getClassLoader().getResource(path);
             if (url == null) {
@@ -59,20 +60,16 @@ public final class ResourceUtils {
                     .replaceFirst("file:", "")
                     .replace(" ", "\\ ");
 
-            logger.debug("Opening JAR in path: {}", jarPath);
+            logger.debug("Opening JAR with path: {}", jarPath);
             try (final JarFile jarFile = new JarFile(jarPath)) {
                 final Enumeration<JarEntry> entries = jarFile.entries();
-                final List<URIResource> resources = new ArrayList<>();
+                final List<PathResource> resources = new ArrayList<>();
 
                 while (entries.hasMoreElements()) {
                     final JarEntry entry = entries.nextElement();
                     if (entry.getRealName().startsWith(path) && pathPredicate.test(entry.getRealName())) {
                         final URI uri = new URI(entry.getName());
-                        final FileTime creationTime = (entry.getCreationTime() == null)
-                                ? entry.getLastModifiedTime()
-                                : entry.getCreationTime();
-
-                        logger.debug("Found files at path '{}' with creation time '{}'", uri, creationTime);
+                        logger.debug("Found files at path: {}", uri);
                         resources.add(URIResource.of(uri));
                     }
                 }
@@ -82,7 +79,7 @@ public final class ResourceUtils {
             }
         } catch (IOException | URISyntaxException e) {
             final String filePath = "/" + path;
-            logger.debug("Can not open JAR file, looking for files outside JAR in path: {}", filePath);
+            logger.debug("Can not open JAR file, looking for files outside JAR with path: {}", filePath);
 
             final URL resource = ResourceUtils.class.getResource(filePath);
             if (resource == null) {
@@ -91,13 +88,13 @@ public final class ResourceUtils {
 
             final File[] files = new File(resource.getPath()).listFiles();
             if (ArrayUtils.isEmpty(files)) {
-                logger.debug("No swaggers found outside JAR in path: {}", filePath);
+                logger.debug("No swaggers found outside JAR with path: {}", filePath);
                 return Collections.emptyList();
             }
 
-            logger.debug("Found '{}' files outside JAR in path: {}", files.length, filePath);
+            logger.debug("Found '{}' files outside JAR with path: {}", files.length, filePath);
             return Arrays.stream(files)
-                    .map(f -> URIResource.of(f.toURI()))
+                    .map(FileResource::of)
                     .collect(Collectors.toList());
         }
     }
