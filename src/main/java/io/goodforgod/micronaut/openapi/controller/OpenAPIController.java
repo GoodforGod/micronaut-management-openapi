@@ -3,8 +3,9 @@ package io.goodforgod.micronaut.openapi.controller;
 
 import io.goodforgod.micronaut.openapi.OpenAPISettings;
 import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
+import io.goodforgod.micronaut.openapi.model.FileResource;
+import io.goodforgod.micronaut.openapi.model.PathResource;
 import io.goodforgod.micronaut.openapi.model.Resource;
-import io.goodforgod.micronaut.openapi.model.URIResource;
 import io.goodforgod.micronaut.openapi.service.OpenAPIProvider;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.util.StringUtils;
@@ -23,6 +24,8 @@ import jakarta.inject.Inject;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,8 +38,10 @@ import java.util.Optional;
 @Controller("${" + OpenAPISettings.PREFIX + ".path:" + OpenAPISettings.DEFAULT_OPENAPI_URL + "}")
 public class OpenAPIController {
 
+    private static final Logger logger = LoggerFactory.getLogger(OpenAPIController.class);
+
     private static final String YAML_CONTENT_TYPE = "text/x-yaml;charset=utf-8";
-    private static final MediaType mediaType = MediaType.of(YAML_CONTENT_TYPE);
+    private static final MediaType MEDIA_TYPE = MediaType.of(YAML_CONTENT_TYPE);
 
     private final OpenAPIProvider openAPIProvider;
     private final OpenAPIConfig openAPIConfig;
@@ -57,12 +62,17 @@ public class OpenAPIController {
 
         if (openapi.isEmpty()) {
             throw new HttpStatusException(HttpStatus.NOT_FOUND, "Can't find OpenAPI file");
-        } else if (openapi.get() instanceof URIResource) {
-            return new SystemFile(new File(((URIResource) openapi.get()).getURI().getPath()), mediaType);
+        } else if (openapi.get() instanceof FileResource) {
+            final File file = ((FileResource) openapi.get()).getFile();
+            logger.debug("Streaming file for path: {}", file);
+            return new SystemFile(file, MEDIA_TYPE);
         } else {
             final InputStream inputStream = openapi.get().getStream();
             if (inputStream != null) {
-                return new StreamedFile(inputStream, mediaType);
+                return new StreamedFile(inputStream, MEDIA_TYPE);
+            } else if (openapi.get() instanceof PathResource) {
+                throw new HttpStatusException(HttpStatus.NO_RESPONSE,
+                        "Can't read OpenAPI file: " + ((PathResource) openapi.get()).getPath());
             } else {
                 throw new HttpStatusException(HttpStatus.NO_RESPONSE, "Can't read OpenAPI file cause it was empty");
             }
