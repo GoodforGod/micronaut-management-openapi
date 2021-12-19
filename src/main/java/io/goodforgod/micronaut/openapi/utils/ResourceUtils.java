@@ -81,7 +81,7 @@ public final class ResourceUtils {
             final String filePath = "/" + path;
             logger.debug("Can not open JAR file, looking for files outside JAR with path: {}", filePath);
 
-            final URL resource = ResourceUtils.class.getClassLoader().getResource(filePath);
+            final URL resource = ResourceUtils.class.getResource(filePath);
             if (resource == null) {
                 return Collections.emptyList();
             }
