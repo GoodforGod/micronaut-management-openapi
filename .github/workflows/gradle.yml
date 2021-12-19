@@ -35,6 +35,7 @@ jobs:
         run: ./gradlew test jacocoTestReport
 
       - name: SonarQube
+        if: matrix.java == '17'
         run: ./gradlew sonarqube
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
