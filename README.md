@@ -52,10 +52,11 @@ More info about Micronaut OpenAPI generator [here in official documentation](htt
 
 ## Endpoints
 
-Library automatically *scan* for OpenAPI files inside JAR and expose them via OpenAPI endpoint.
+Library automatically *scan* for OpenAPI files inside JAR in *default-directory* and expose them via OpenAPI endpoint.
 
-If *merge* is disabled then any first OpenAPI file will be exposed (according to *exclude* and *include* configuration).
-If *merge* is enabled then all suitable (according to *exclude* and *include* configuration) OpenAPI files will be merged into one.
+Merge strategy:
+- *merge* is disabled then any first OpenAPI file will be exposed (according to *exclude* and *include* configuration).
+- *merge* is enabled then all suitable (according to *exclude* and *include* configuration) OpenAPI files will be merged into one and exposed.
 
 **/openapi** - Endpoint optimized for exposing [OpenAPI](https://spec.openapis.org/oas/v3.1.0) file.
 
@@ -69,8 +70,6 @@ Swagger UI have **Light\Dark** theme switch.
 
 Most of the settings are *cloud-friendly* by default.
 
-Just by adding this library as dependency you are ready to go.
-
 ```yaml
 openapi:
   path: /openapi                        // path for OpenAPI endpoint                          (default - /openapi)
@@ -82,7 +81,7 @@ openapi:
     - META-INF/swagger/openapi-2.yml    // Can be Path or filename
   include:                              // Include ONLY specified OpenAPI files for exposure  (path only)
     - META-INF/swagger/openapi-3.yml    // Path to file inside JAR
-    - META-INF/swagger/openapi-4.yml    // Path to file inside JAR
+    - external-swagger/openapi-4.yml    // Path to file inside JAR
   
   swagger-ui:
     path: /swagger-ui                   // path for Swagger-UI endpoint                       (default - /swagger-ui)
