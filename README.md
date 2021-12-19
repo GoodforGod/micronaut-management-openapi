@@ -15,7 +15,7 @@ Features:
 - Swagger UI Dark\Light theme.
 - Rapidoc exposure endpoint.
 
-![](https://media.giphy.com/media/HNOzdIugRSx8FnDKWR/giphy.gif)
+<img src="https://s10.gifyu.com/images/optimized-swagger.gif" width="800"/>
 
 ## Dependency :rocket:
 
@@ -24,7 +24,7 @@ Library ships for *Micronaut 3*.
 **Gradle**
 ```groovy
 dependencies {
-    implementation "io.goodforgod:micronaut-management-openapi:0.9.0"
+    implementation "io.goodforgod:micronaut-management-openapi:1.0.0"
 }
 ```
 
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>io.goodforgod</groupId>
     <artifactId>micronaut-management-openapi</artifactId>
-    <version>0.9.0</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -74,8 +74,8 @@ Just by adding this library as dependency you are ready to go.
 ```yaml
 openapi:
   path: /openapi                        // path for OpenAPI endpoint                          (default - /openapi)
-  enabled: true                         // enalbed OpenAPI exposure                           (default - true)
-  merge: false                          // enable merging OpenAPI found in default-directory  (default - false)
+  enabled: true                         // Enable OpenAPI exposure                            (default - true)
+  merge: false                          // Enable merging OpenAPI found in default-directory  (default - false)
   default-directory: META-INF/swagger   // path inside JAR where to search OpenAPI            (default - META-INF/swagger)
   exclude:                              // OpenAPI files to exclude from exposure             (path or filename)
     - openapi-1.yml                     // Can be Path or filename
@@ -85,12 +85,12 @@ openapi:
     - META-INF/swagger/openapi-4.yml    // Path to file inside JAR
   
   swagger-ui:
-    path: /swagger-ui                   // path for Swagger-UI endpoint                        (default - /swagger-ui)
-    enalbed: false                      // enalbed Swagger-UI exposure                         (default - false)
+    path: /swagger-ui                   // path for Swagger-UI endpoint                       (default - /swagger-ui)
+    enalbed: false                      // Enable Swagger-UI exposure                         (default - false)
   
   rapidoc:
-    path: /rapidoc                      // path for Rapidoc endpoint                           (default - /rapidoc)
-    enalbed: false                      // enalbed Rapidoc exposure                            (default - false) 
+    path: /rapidoc                      // path for Rapidoc endpoint                          (default - /rapidoc)
+    enalbed: false                      // Enable Rapidoc exposure                            (default - false) 
 ```
 
 ## Security
