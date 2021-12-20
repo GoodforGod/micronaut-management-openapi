@@ -52,7 +52,7 @@ public final class ResourceUtils {
         try {
             final URL url = ResourceUtils.class.getClassLoader().getResource(path);
             if (url == null) {
-                throw new IllegalArgumentException("URL is nullable for path: " + path);
+                return Collections.emptyList();
             }
 
             final String jarPath = url.getPath()
@@ -94,6 +94,7 @@ public final class ResourceUtils {
 
             logger.debug("Found '{}' files outside JAR with path: {}", files.length, filePath);
             return Arrays.stream(files)
+                    .filter(f -> pathPredicate.test(f.getPath()))
                     .map(FileResource::of)
                     .collect(Collectors.toList());
         }
