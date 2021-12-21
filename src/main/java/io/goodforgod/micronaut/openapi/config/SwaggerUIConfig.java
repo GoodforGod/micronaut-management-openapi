@@ -1,10 +1,8 @@
 package io.goodforgod.micronaut.openapi.config;
 
-
 import io.goodforgod.micronaut.openapi.OpenAPISettings;
 import io.goodforgod.micronaut.openapi.controller.SwaggerUIController;
 import io.micronaut.context.annotation.ConfigurationProperties;
-
 
 /**
  * Configuration for Swagger UI

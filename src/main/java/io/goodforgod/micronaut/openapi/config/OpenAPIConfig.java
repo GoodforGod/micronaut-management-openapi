@@ -1,6 +1,5 @@
 package io.goodforgod.micronaut.openapi.config;
 
-
 import io.goodforgod.micronaut.openapi.OpenAPISettings;
 import io.goodforgod.micronaut.openapi.controller.OpenAPIController;
 import io.micronaut.context.annotation.ConfigurationProperties;
@@ -10,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Configuration for OpenAPI

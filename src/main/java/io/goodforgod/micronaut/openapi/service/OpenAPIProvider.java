@@ -1,13 +1,16 @@
 package io.goodforgod.micronaut.openapi.service;
 
-
 import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
 import io.goodforgod.micronaut.openapi.model.*;
 import io.goodforgod.micronaut.openapi.utils.ResourceUtils;
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.exceptions.HttpStatusException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import java.io.*;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -18,11 +21,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
-
 /**
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
  */
+@Introspected
 @Singleton
 public class OpenAPIProvider {
 
@@ -76,6 +79,7 @@ public class OpenAPIProvider {
             return Optional.empty();
         }
 
+        logger.debug("Finished OpenAPI files merging");
         try {
             final Resource fileResource = getYamlAsFileResource(mergedYaml);
             this.merged = fileResource;
@@ -96,7 +100,7 @@ public class OpenAPIProvider {
         final File file = new File(MERGED_FILE);
         try (final Writer writer = new BufferedWriter(new FileWriter(file))) {
             new Yaml().dump(yaml, writer);
-            logger.debug("OpenAPI file written to: {}", MERGED_FILE);
+            logger.debug("Finished OpenAPI file write to: {}", MERGED_FILE);
             return FileResource.of(file);
         } catch (Exception e) {
             throw new IllegalStateException(e.getMessage());
@@ -108,7 +112,7 @@ public class OpenAPIProvider {
      * @return resource with YAML as direct buffered resource
      */
     private Resource getYamlAsBufferedResource(@NotNull Map<Object, Object> yaml) {
-        logger.debug("Writing OpenAPI file to BufferedResource");
+        logger.debug("Trying writing OpenAPI file to BufferedResource");
         try (final StringWriter writer = new StringWriter()) {
             new Yaml().dump(yaml, writer);
             final String value = writer.toString();
@@ -149,12 +153,12 @@ public class OpenAPIProvider {
         if (stream == null) {
             stream = OpenAPIProvider.class.getClassLoader().getResourceAsStream("/" + path);
             if (stream == null) {
-                throw new IllegalArgumentException("OpenAPI can't be read: " + path);
+                throw new HttpStatusException(HttpStatus.NOT_IMPLEMENTED, "Can't read direct OpenAPI file: " + path);
             } else {
-                return DirectResource.of("/" + path);
+                return URIResource.of(URI.create("/" + path));
             }
         } else {
-            return DirectResource.of(path);
+            return URIResource.of(URI.create(path));
         }
     }
 }

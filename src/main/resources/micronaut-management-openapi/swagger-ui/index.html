@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="theme-light">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>${serviceName} | Swagger UI</title>
@@ -8,63 +8,49 @@
     <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
     <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js"></script>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="https://unpkg.com/swagger-ui-themes@3.0.0/themes/3.x/theme-flattop.css"/>
-    <link id="dark-theme-swagger-ui" rel="stylesheet" type="text/css"
-          href="https://cdn.statically.io/gh/goodforgod/openapi-resources/master/swagger-ui/swagger-ui-theme-3.0.0-dark.css" disabled/>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-themes@3.0.0/themes/3.x/theme-flattop.css"/>
+    <link id="dark-theme-swagger-ui" rel="stylesheet" type="text/css" href="https://cdn.statically.io/gh/goodforgod/openapi-resources/master/swagger-ui/swagger-ui-theme-3.0.0-dark.css" disabled/>
     <style>
-        .theme-light {
-            --button-theme-font-color: #2c2c2c;
-        }
-
-        .theme-dark {
-            --button-theme-font-color: #d4d4d4;
-        }
-
-        .button-theme-container h1 {
-            color: var(--button-theme-font-color);
-        }
-
         .button-theme-container button {
-            color: var(--button-theme-font-color);
             background: transparent;
             padding: 6px 6px;
             font-size: 22px;
             right: 8px;
             border: 2px;
-            position: relative;
+            position: absolute;
             border-radius: 5px;
         }
     </style>
 </head>
 <body>
 <div class="button-theme-container">
-    <button style="position:absolute;" id="button-theme-switch" onclick="toggleTheme()">🌞</button>
+    <button id="button-theme-switch" onclick="toggleTheme()">🌞</button>
     <script>
+        const storageProperty = "micronaut-management-openapi-swagger-ui-theme"
+        const themeDark = "theme-dark"
+        const themeLight = "theme-light"
         function setTheme(themeName) {
-            localStorage.setItem("theme", themeName);
-            document.documentElement.className = themeName;
-
+            localStorage.setItem(storageProperty, themeName);
             let button = document.getElementById("button-theme-switch");
             if (button != null) {
-                button.textContent = themeName === "theme-dark" ? "🌚" : "🌞"
+                button.textContent = themeName === themeDark ? "🌚" : "🌞"
             }
 
             let stylesheet = document.getElementById("dark-theme-swagger-ui");
             if (stylesheet != null) {
-                stylesheet.disabled = themeName !== "theme-dark"
+                stylesheet.disabled = themeName !== themeDark
             }
         }
 
         // function to toggle between light and dark theme
         function toggleTheme() {
-            let themeName = localStorage.getItem("theme") === "theme-dark" ? "theme-light" : "theme-dark";
+            let themeName = localStorage.getItem(storageProperty) === themeDark ? themeLight : themeDark;
             setTheme(themeName);
         }
 
         // Immediately invoked function to set the theme on initial load
         (function () {
-            let themeName = localStorage.getItem("theme") === "theme-dark" ? "theme-dark" : "theme-light";
+            let themeName = localStorage.getItem(storageProperty) === themeDark ? themeDark : themeLight;
             setTheme(themeName);
         })();
     </script>
@@ -100,7 +86,7 @@
                 url: window.location.href.substring(0, window.location.href.lastIndexOf("#") === -1
                     ? window.location.href.length
                     : window.location.href.lastIndexOf("#")
-                ).replace("${swaggerUIPath}", "${swaggerPath}"),
+                ).replace("${swaggerUIPath}", "${openapiPath}"),
                 dom_id: "#swagger-ui",
                 presets: [
                     SwaggerUIBundle.presets.apis,

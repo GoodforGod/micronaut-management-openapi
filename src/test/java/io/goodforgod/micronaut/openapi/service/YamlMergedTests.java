@@ -1,6 +1,5 @@
 package io.goodforgod.micronaut.openapi.service;
 
-
 import io.goodforgod.micronaut.openapi.model.Resource;
 import io.goodforgod.micronaut.openapi.model.URIResource;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -12,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

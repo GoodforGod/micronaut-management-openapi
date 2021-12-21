@@ -1,10 +1,8 @@
 package io.goodforgod.micronaut.openapi.model;
 
-
 import java.io.InputStream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 /**
  * @author Anton Kurako (GoodforGod)
@@ -12,6 +10,9 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface PathResource extends Resource {
 
+    /**
+     * @return path to resource
+     */
     @NotNull
     String getPath();
 

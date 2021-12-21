@@ -1,6 +1,5 @@
 package io.goodforgod.micronaut.openapi.controller;
 
-
 import io.goodforgod.micronaut.openapi.OpenAPISettings;
 import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
 import io.goodforgod.micronaut.openapi.config.RapidocConfig;
@@ -8,6 +7,7 @@ import io.goodforgod.micronaut.openapi.utils.ResourceUtils;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.context.env.DefaultPropertyPlaceholderResolver;
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.core.util.SupplierUtil;
@@ -18,15 +18,18 @@ import io.micronaut.http.annotation.Get;
 import io.micronaut.http.exceptions.HttpStatusException;
 import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.inject.Inject;
 import java.util.Map;
 import java.util.function.Supplier;
-
 
 /**
  * @author Anton Kurako (GoodforGod)
  * @since 22.9.2020
  */
+@Introspected
+@Hidden
+@Requires(classes = Controller.class)
 @Requires(property = OpenAPISettings.PREFIX + ".rapidoc.enabled", value = StringUtils.TRUE, defaultValue = StringUtils.FALSE)
 @Controller("${" + OpenAPISettings.PREFIX + ".rapidoc.path:" + OpenAPISettings.DEFAULT_RAPIDOC_URL + "}")
 public class RapidocController {
@@ -46,7 +49,7 @@ public class RapidocController {
 
             final Map<String, Object> map = Map.of(
                     "serviceName", serviceName,
-                    "swaggerPath", openAPIConfig.getPath(),
+                    "openapiPath", openAPIConfig.getPath(),
                     "rapidocPath", rapidocConfig.getPath());
 
             var propertyResolver = new MapPropertyResolver(map);

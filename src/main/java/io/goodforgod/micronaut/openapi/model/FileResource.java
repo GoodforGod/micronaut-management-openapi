@@ -1,9 +1,7 @@
 package io.goodforgod.micronaut.openapi.model;
 
-
 import java.io.File;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Model for representing inner resource
@@ -30,10 +28,5 @@ public final class FileResource implements PathResource {
     @Override
     public @NotNull String getPath() {
         return file.toURI().getPath();
-    }
-
-    @Override
-    public void close() {
-        // do nothing
     }
 }
