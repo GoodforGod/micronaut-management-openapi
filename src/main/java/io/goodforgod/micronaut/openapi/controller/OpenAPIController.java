@@ -1,6 +1,5 @@
 package io.goodforgod.micronaut.openapi.controller;
 
-
 import io.goodforgod.micronaut.openapi.OpenAPISettings;
 import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
 import io.goodforgod.micronaut.openapi.model.FileResource;
@@ -8,6 +7,7 @@ import io.goodforgod.micronaut.openapi.model.PathResource;
 import io.goodforgod.micronaut.openapi.model.Resource;
 import io.goodforgod.micronaut.openapi.service.OpenAPIProvider;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
@@ -27,11 +27,11 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author Anton Kurako (GoodforGod)
  * @since 20.9.2020
  */
+@Introspected
 @Hidden
 @Requires(classes = FileCustomizableResponseType.class)
 @Requires(property = OpenAPISettings.PREFIX + ".enabled", value = StringUtils.TRUE, defaultValue = StringUtils.TRUE)
@@ -71,10 +71,10 @@ public class OpenAPIController {
             if (inputStream != null) {
                 return new StreamedFile(inputStream, MEDIA_TYPE);
             } else if (openapi.get() instanceof PathResource) {
-                throw new HttpStatusException(HttpStatus.NO_RESPONSE,
+                throw new HttpStatusException(HttpStatus.NOT_IMPLEMENTED,
                         "Can't read OpenAPI file: " + ((PathResource) openapi.get()).getPath());
             } else {
-                throw new HttpStatusException(HttpStatus.NO_RESPONSE, "Can't read OpenAPI file cause it was empty");
+                throw new HttpStatusException(HttpStatus.NOT_IMPLEMENTED, "Can't read OpenAPI file cause it was empty");
             }
         }
     }

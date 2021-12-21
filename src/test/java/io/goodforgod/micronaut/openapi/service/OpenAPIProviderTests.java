@@ -1,6 +1,5 @@
 package io.goodforgod.micronaut.openapi.service;
 
-
 import io.goodforgod.micronaut.openapi.OpenAPISettings;
 import io.goodforgod.micronaut.openapi.config.OpenAPIConfig;
 import io.goodforgod.micronaut.openapi.config.RapidocConfig;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

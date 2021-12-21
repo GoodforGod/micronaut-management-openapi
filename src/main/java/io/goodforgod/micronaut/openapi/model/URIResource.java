@@ -1,9 +1,7 @@
 package io.goodforgod.micronaut.openapi.model;
 
-
 import java.net.URI;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Model for representing inner resource
@@ -23,17 +21,8 @@ public final class URIResource implements PathResource {
         return new URIResource(uri);
     }
 
-    public URI getURI() {
-        return uri;
-    }
-
     @Override
     public @NotNull String getPath() {
         return uri.getPath();
-    }
-
-    @Override
-    public void close() {
-        // do nothing
     }
 }

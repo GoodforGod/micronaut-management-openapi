@@ -1,6 +1,5 @@
 package io.goodforgod.micronaut.openapi.utils;
 
-
 import io.goodforgod.micronaut.openapi.model.FileResource;
 import io.goodforgod.micronaut.openapi.model.PathResource;
 import io.goodforgod.micronaut.openapi.model.URIResource;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Utils for extraction resources inside JAR and outside JAR
@@ -116,7 +114,7 @@ public final class ResourceUtils {
                 });
     }
 
-    public static String readFileFromStream(InputStream stream) throws IOException {
+    public static String readFileFromStream(@NotNull InputStream stream) throws IOException {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             return IOUtils.readText(in);
         }

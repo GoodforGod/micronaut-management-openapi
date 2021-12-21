@@ -1,6 +1,5 @@
 package io.goodforgod.micronaut.openapi;
 
-
 /**
  * Configuration for OpenAPI.
  *

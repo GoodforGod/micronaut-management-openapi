@@ -1,16 +1,17 @@
 package io.goodforgod.micronaut.openapi.service;
 
-
 import io.goodforgod.micronaut.openapi.model.BufferedResource;
 import io.goodforgod.micronaut.openapi.model.Resource;
 import io.goodforgod.micronaut.openapi.model.URLResource;
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.util.CollectionUtils;
+import io.micronaut.http.HttpStatus;
+import io.micronaut.http.exceptions.HttpStatusException;
 import jakarta.inject.Singleton;
 import java.io.InputStream;
 import java.util.*;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
-
 
 /**
  * Service for merging YAML resources
@@ -18,6 +19,7 @@ import org.yaml.snakeyaml.Yaml;
  * @author Anton Kurako (GoodforGod)
  * @since 21.9.2020
  */
+@Introspected
 @Singleton
 public class YamlMerger {
 
@@ -49,10 +51,11 @@ public class YamlMerger {
             final InputStream inputStream = resource.getStream();
             if (inputStream == null) {
                 if (resource instanceof URLResource) {
-                    throw new IllegalArgumentException(
-                            "OpenAPI can't be loaded from path: " + ((URLResource) resource).getURL());
+                    throw new HttpStatusException(HttpStatus.NOT_IMPLEMENTED,
+                            "Can't load Yaml file: " + ((URLResource) resource).getPath());
                 } else {
-                    throw new IllegalArgumentException("OpenAPI can't be loaded");
+                    throw new HttpStatusException(HttpStatus.NOT_IMPLEMENTED,
+                            "Can't load Yaml file cause it was empty");
                 }
             }
 
@@ -84,13 +87,16 @@ public class YamlMerger {
                     if (existingValue instanceof Map) {
                         mergeYamlFiles((Map<Object, Object>) existingValue, (Map<Object, Object>) v);
                     } else {
-                        throw new IllegalArgumentException("Can't merge simple type to map: " + existingValue);
+                        throw new HttpStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                                "Can't merge simple type to map: " + existingValue);
                     }
                 } else if (v instanceof List) {
                     final Object value = merged.get(key);
                     final boolean v2 = value instanceof List;
-                    if (!v2)
-                        throw new IllegalArgumentException("Can't merge a list with a non-list: " + key);
+                    if (!v2) {
+                        throw new HttpStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                                "Can't merge a list with a non-list: " + key);
+                    }
 
                     ((List<Object>) value).addAll(((List<Object>) v));
                 } else if (v instanceof String
@@ -117,7 +123,7 @@ public class YamlMerger {
     }
 
     private void throwUnknownValueType(Object key, Object yamlValue) {
-        throw new IllegalArgumentException(
-                "Can't merge element of unknown type: " + key + ": " + yamlValue.getClass().getSimpleName());
+        throw new HttpStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+                "Can't merge element of unknown type: " + key + ": " + yamlValue.getClass());
     }
 }

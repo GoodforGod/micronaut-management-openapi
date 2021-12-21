@@ -1,11 +1,9 @@
 package io.goodforgod.micronaut.openapi.data;
 
-
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
-
 
 /**
  * @author Anton Kurako (GoodforGod)

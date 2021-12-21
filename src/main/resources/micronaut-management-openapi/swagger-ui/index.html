@@ -26,13 +26,11 @@
 <div class="button-theme-container">
     <button id="button-theme-switch" onclick="toggleTheme()">🌞</button>
     <script>
-        const storageProperty = "swagger-ui-theme"
+        const storageProperty = "micronaut-management-openapi-swagger-ui-theme"
         const themeDark = "theme-dark"
-        const themeLight = "theme-dark"
+        const themeLight = "theme-light"
         function setTheme(themeName) {
             localStorage.setItem(storageProperty, themeName);
-            document.documentElement.className = themeName;
-
             let button = document.getElementById("button-theme-switch");
             if (button != null) {
                 button.textContent = themeName === themeDark ? "🌚" : "🌞"
@@ -88,7 +86,7 @@
                 url: window.location.href.substring(0, window.location.href.lastIndexOf("#") === -1
                     ? window.location.href.length
                     : window.location.href.lastIndexOf("#")
-                ).replace("${swaggerUIPath}", "${swaggerPath}"),
+                ).replace("${swaggerUIPath}", "${openapiPath}"),
                 dom_id: "#swagger-ui",
                 presets: [
                     SwaggerUIBundle.presets.apis,

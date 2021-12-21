@@ -1,12 +1,10 @@
 package io.goodforgod.micronaut.openapi.model;
 
-
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import org.jetbrains.annotations.NotNull;
-
 
 /**
  * Model for representing inner resource
@@ -33,10 +31,5 @@ public final class BufferedResource implements Resource {
 
     public String getValue() {
         return value;
-    }
-
-    @Override
-    public void close() throws Exception {
-        // do nothing
     }
 }
