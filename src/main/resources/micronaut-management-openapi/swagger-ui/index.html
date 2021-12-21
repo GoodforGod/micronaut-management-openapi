@@ -41,30 +41,33 @@
 <div class="button-theme-container">
     <button style="position:absolute;" id="button-theme-switch" onclick="toggleTheme()">🌞</button>
     <script>
+        const storageProperty = "swagger-ui-theme"
+        const themeDark = "theme-dark"
+        const themeLight = "theme-dark"
         function setTheme(themeName) {
-            localStorage.setItem("theme", themeName);
+            localStorage.setItem(storageProperty, themeName);
             document.documentElement.className = themeName;
 
             let button = document.getElementById("button-theme-switch");
             if (button != null) {
-                button.textContent = themeName === "theme-dark" ? "🌚" : "🌞"
+                button.textContent = themeName === themeDark ? "🌚" : "🌞"
             }
 
             let stylesheet = document.getElementById("dark-theme-swagger-ui");
             if (stylesheet != null) {
-                stylesheet.disabled = themeName !== "theme-dark"
+                stylesheet.disabled = themeName !== themeDark
             }
         }
 
         // function to toggle between light and dark theme
         function toggleTheme() {
-            let themeName = localStorage.getItem("theme") === "theme-dark" ? "theme-light" : "theme-dark";
+            let themeName = localStorage.getItem(storageProperty) === themeDark ? themeLight : themeDark;
             setTheme(themeName);
         }
 
         // Immediately invoked function to set the theme on initial load
         (function () {
-            let themeName = localStorage.getItem("theme") === "theme-dark" ? "theme-dark" : "theme-light";
+            let themeName = localStorage.getItem(storageProperty) === themeDark ? themeDark : themeLight;
             setTheme(themeName);
         })();
     </script>
