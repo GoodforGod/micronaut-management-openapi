@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="theme-light">
+<html lang="en">
 <head>
     <meta charset="UTF-8"/>
     <title>${serviceName} | Swagger UI</title>
@@ -8,38 +8,23 @@
     <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
     <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-standalone-preset.js"></script>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css"/>
-    <link rel="stylesheet" type="text/css"
-          href="https://unpkg.com/swagger-ui-themes@3.0.0/themes/3.x/theme-flattop.css"/>
-    <link id="dark-theme-swagger-ui" rel="stylesheet" type="text/css"
-          href="https://cdn.statically.io/gh/goodforgod/openapi-resources/master/swagger-ui/swagger-ui-theme-3.0.0-dark.css" disabled/>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/swagger-ui-themes@3.0.0/themes/3.x/theme-flattop.css"/>
+    <link id="dark-theme-swagger-ui" rel="stylesheet" type="text/css" href="https://cdn.statically.io/gh/goodforgod/openapi-resources/master/swagger-ui/swagger-ui-theme-3.0.0-dark.css" disabled/>
     <style>
-        .theme-light {
-            --button-theme-font-color: #2c2c2c;
-        }
-
-        .theme-dark {
-            --button-theme-font-color: #d4d4d4;
-        }
-
-        .button-theme-container h1 {
-            color: var(--button-theme-font-color);
-        }
-
         .button-theme-container button {
-            color: var(--button-theme-font-color);
             background: transparent;
             padding: 6px 6px;
             font-size: 22px;
             right: 8px;
             border: 2px;
-            position: relative;
+            position: absolute;
             border-radius: 5px;
         }
     </style>
 </head>
 <body>
 <div class="button-theme-container">
-    <button style="position:absolute;" id="button-theme-switch" onclick="toggleTheme()">🌞</button>
+    <button id="button-theme-switch" onclick="toggleTheme()">🌞</button>
     <script>
         const storageProperty = "swagger-ui-theme"
         const themeDark = "theme-dark"
