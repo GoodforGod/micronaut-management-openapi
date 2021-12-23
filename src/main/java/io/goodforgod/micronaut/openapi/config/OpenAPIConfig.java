@@ -19,42 +19,20 @@ import org.jetbrains.annotations.NotNull;
 @ConfigurationProperties(OpenAPISettings.PREFIX)
 public class OpenAPIConfig {
 
-    /**
-     * Enables {@link OpenAPIController} controller
-     */
     private boolean enabled = true;
-
-    /**
-     * Allow merging multiple OpenAPI files into one
-     */
     private boolean merge = false;
-
-    /**
-     * Allow change {@link OpenAPIController} controller path
-     */
     private String path = OpenAPISettings.DEFAULT_OPENAPI_URL;
-
-    /**
-     * Default directory inside JAR to scan for OpenAPI files
-     * 
-     * @see io.goodforgod.micronaut.openapi.service.OpenAPIProvider
-     */
     private String defaultDirectory = OpenAPISettings.DEFAULT_DIR;
-
-    /**
-     * Exclude listed OpenAPI files (if {@link #include} is not specified)
-     */
     private Set<String> exclude;
-
-    /**
-     * Include only listed OpenAPI files (ignores {@link #exclude})
-     */
     private Set<String> include;
 
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * Enables {@link OpenAPIController} controller
+     */
     void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -63,6 +41,9 @@ public class OpenAPIConfig {
         return merge;
     }
 
+    /**
+     * Allow merging multiple OpenAPI files into one
+     */
     void setMerge(boolean merge) {
         this.merge = merge;
     }
@@ -71,6 +52,9 @@ public class OpenAPIConfig {
         return path;
     }
 
+    /**
+     * Allow change {@link OpenAPIController} controller path
+     */
     void setPath(String path) {
         this.path = path;
     }
@@ -79,6 +63,11 @@ public class OpenAPIConfig {
         return defaultDirectory;
     }
 
+    /**
+     * Default directory inside JAR to scan for OpenAPI files
+     *
+     * @see io.goodforgod.micronaut.openapi.service.OpenAPIProvider
+     */
     void setDefaultDirectory(String defaultDirectory) {
         this.defaultDirectory = defaultDirectory;
     }
@@ -89,6 +78,9 @@ public class OpenAPIConfig {
                 : exclude;
     }
 
+    /**
+     * Exclude listed OpenAPI files (if {@link #include} is not specified)
+     */
     void setExclude(List<String> exclude) {
         this.exclude = new HashSet<>(exclude);
     }
@@ -99,6 +91,9 @@ public class OpenAPIConfig {
                 : include;
     }
 
+    /**
+     * Include only listed OpenAPI files (ignores {@link #exclude})
+     */
     void setInclude(List<String> include) {
         this.include = new HashSet<>(include);
     }

@@ -2,7 +2,7 @@ plugins {
     id "jacoco"
     id "maven-publish"
 
-    id "io.micronaut.library" version "3.0.0"
+    id "io.micronaut.library" version "3.1.1"
     id "org.sonarqube" version "3.3"
     id "com.diffplug.spotless" version "6.0.4"
 }
@@ -46,7 +46,7 @@ dependencies {
     testCompileOnly "io.swagger.core.v3:swagger-annotations"
 
     testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
-    testRuntimeOnly "ch.qos.logback:logback-classic:1.2.8"
+    testRuntimeOnly "ch.qos.logback:logback-classic:1.2.9"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-params"

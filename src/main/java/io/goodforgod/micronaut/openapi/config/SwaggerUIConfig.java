@@ -13,20 +13,16 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 @ConfigurationProperties(OpenAPISettings.PREFIX + ".swagger-ui")
 public class SwaggerUIConfig {
 
-    /**
-     * Enable Swagger-UI exposure {@link SwaggerUIController}
-     */
     private boolean enabled = true;
-
-    /**
-     * Path for Swagger-UI exposure
-     */
     private String path = OpenAPISettings.DEFAULT_SWAGGER_UI_URL;
 
     public String getPath() {
         return path;
     }
 
+    /**
+     * Path for Swagger-UI exposure
+     */
     void setPath(String path) {
         this.path = path;
     }
@@ -35,6 +31,9 @@ public class SwaggerUIConfig {
         return enabled;
     }
 
+    /**
+     * Enable Swagger-UI exposure {@link SwaggerUIController}
+     */
     void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
