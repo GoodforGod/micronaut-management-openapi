@@ -21,6 +21,9 @@ public final class URIResource implements PathResource {
         return new URIResource(uri);
     }
 
+    /**
+     * @return path to resource
+     */
     @Override
     public @NotNull String getPath() {
         return uri.getPath();

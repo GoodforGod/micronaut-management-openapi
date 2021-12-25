@@ -65,7 +65,8 @@ public final class ResourceUtils {
 
                 while (entries.hasMoreElements()) {
                     final JarEntry entry = entries.nextElement();
-                    if (entry.getRealName().startsWith(path) && pathPredicate.test(entry.getRealName())) {
+                    final String name = entry.getName();
+                    if (name.startsWith(path) && pathPredicate.test(name)) {
                         final URI uri = new URI(entry.getName());
                         logger.debug("Found files at path: {}", uri);
                         resources.add(URIResource.of(uri));
@@ -99,8 +100,8 @@ public final class ResourceUtils {
     }
 
     public static Optional<InputStream> getFileAsStream(@NotNull String path) {
-        return Optional.ofNullable(ResourceUtils.class.getResourceAsStream(path))
-                .or(() -> Optional.ofNullable(ResourceUtils.class.getResourceAsStream("/" + path)));
+        return Optional.ofNullable(Optional.ofNullable(ResourceUtils.class.getResourceAsStream(path))
+                .orElseGet(() -> ResourceUtils.class.getResourceAsStream("/" + path)));
     }
 
     public static Optional<String> getFileAsString(@NotNull String path) {

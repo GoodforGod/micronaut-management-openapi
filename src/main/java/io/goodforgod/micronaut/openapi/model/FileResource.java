@@ -21,6 +21,9 @@ public final class FileResource implements PathResource {
         return new FileResource(file);
     }
 
+    /**
+     * @return resource as file
+     */
     public File getFile() {
         return file;
     }
