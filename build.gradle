@@ -95,7 +95,7 @@ publishing {
             pom {
                 name = "Micronaut Management OpenAPI"
                 url = "https://github.com/GoodforGod/$artifactId"
-                description = "Library provides Micronaut cloud-friendly OpenAPI/Swagger-UI/Rapidoc management endpoints."
+                description = "Micronaut cloud-friendly OpenAPI/Swagger-UI/Rapidoc management endpoints."
 
                 license {
                     name = "Apache License 2.0"
