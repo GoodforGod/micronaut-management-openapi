@@ -6,6 +6,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,9 @@ class YamlMergedTests extends Assertions {
 
     @Test
     void bothMerged() throws URISyntaxException {
-        final List<Resource> resources = List.of(
-                URIResource.of(new URI("mock/test-1.yml")),
-                URIResource.of(new URI("META-INF/swagger/swagger.yml")));
+        final List<Resource> resources = new ArrayList<>();
+        resources.add(URIResource.of(new URI("mock/test-1.yml")));
+        resources.add(URIResource.of(new URI("META-INF/swagger/swagger.yml")));
 
         final Map<Object, Object> merged = merger.merge(resources);
         assertNotNull(merged);
@@ -42,7 +43,8 @@ class YamlMergedTests extends Assertions {
 
     @Test
     void singleIsNotMerged() throws URISyntaxException {
-        final List<Resource> resources = List.of(URIResource.of(new URI("mock/test-1.yml")));
+        final List<Resource> resources = new ArrayList<>();
+        resources.add(URIResource.of(new URI("mock/test-1.yml")));
 
         final Map<Object, Object> merged = merger.merge(resources);
         assertNotNull(merged);
