@@ -24,7 +24,7 @@ Library ships for *Micronaut 3*.
 **Gradle**
 ```groovy
 dependencies {
-    implementation "io.goodforgod:micronaut-management-openapi:1.0.1"
+    implementation "io.goodforgod:micronaut-management-openapi:1.0.2"
 }
 ```
 
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>io.goodforgod</groupId>
     <artifactId>micronaut-management-openapi</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
