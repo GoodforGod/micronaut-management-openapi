@@ -60,7 +60,7 @@ public class OpenAPIController {
                 ? openAPIProvider.getMerged()
                 : openAPIProvider.getAny();
 
-        if (openapi.isEmpty()) {
+        if (!openapi.isPresent()) {
             throw new HttpStatusException(HttpStatus.NOT_FOUND, "Can't find OpenAPI file");
         } else if (openapi.get() instanceof FileResource) {
             final File file = ((FileResource) openapi.get()).getFile();

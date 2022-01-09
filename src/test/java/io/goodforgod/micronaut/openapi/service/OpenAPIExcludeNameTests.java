@@ -26,6 +26,6 @@ class OpenAPIExcludeNameTests extends Assertions {
         assertTrue(config.getExclude().contains(fileName));
 
         final Optional<Resource> resource = loader.getMerged();
-        assertTrue(resource.isEmpty());
+        assertFalse(resource.isPresent());
     }
 }

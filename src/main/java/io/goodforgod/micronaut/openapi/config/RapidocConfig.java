@@ -13,20 +13,16 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 @ConfigurationProperties(OpenAPISettings.PREFIX + ".rapidoc")
 public class RapidocConfig {
 
-    /**
-     * Enable Rapidoc exposure {@link RapidocController}
-     */
     private boolean enabled = false;
-
-    /**
-     * Path for Rapidoc exposure
-     */
     private String path = OpenAPISettings.DEFAULT_RAPIDOC_URL;
 
     public String getPath() {
         return path;
     }
 
+    /**
+     * Rapidoc exposure path
+     */
     void setPath(String path) {
         this.path = path;
     }
@@ -35,6 +31,9 @@ public class RapidocConfig {
         return enabled;
     }
 
+    /**
+     * Enables Rapidoc exposure via {@link RapidocController} controller
+     */
     void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }

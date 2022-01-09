@@ -29,6 +29,9 @@ public final class BufferedResource implements Resource {
         return new BufferedInputStream(new ByteArrayInputStream(value.getBytes(StandardCharsets.UTF_8)));
     }
 
+    /**
+     * @return resource as buffered string
+     */
     public String getValue() {
         return value;
     }

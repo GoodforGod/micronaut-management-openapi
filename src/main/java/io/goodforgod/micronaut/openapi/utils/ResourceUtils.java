@@ -35,6 +35,7 @@ public final class ResourceUtils {
      * @param path under which to look for resources
      * @return resources under given path
      */
+    @NotNull
     public static List<PathResource> getResources(@NotNull String path) {
         return getResources(path, p -> true);
     }
@@ -44,6 +45,7 @@ public final class ResourceUtils {
      * @param pathPredicate predicate to validate paths
      * @return resources under given path
      */
+    @NotNull
     public static List<PathResource> getResources(@NotNull String path,
                                                   @NotNull Predicate<String> pathPredicate) {
         logger.debug("Looking for files inside JAR with path: {}", path);
@@ -65,7 +67,8 @@ public final class ResourceUtils {
 
                 while (entries.hasMoreElements()) {
                     final JarEntry entry = entries.nextElement();
-                    if (entry.getRealName().startsWith(path) && pathPredicate.test(entry.getRealName())) {
+                    final String name = entry.getName();
+                    if (name.startsWith(path) && pathPredicate.test(name)) {
                         final URI uri = new URI(entry.getName());
                         logger.debug("Found files at path: {}", uri);
                         resources.add(URIResource.of(uri));
@@ -99,8 +102,8 @@ public final class ResourceUtils {
     }
 
     public static Optional<InputStream> getFileAsStream(@NotNull String path) {
-        return Optional.ofNullable(ResourceUtils.class.getResourceAsStream(path))
-                .or(() -> Optional.ofNullable(ResourceUtils.class.getResourceAsStream("/" + path)));
+        return Optional.ofNullable(Optional.ofNullable(ResourceUtils.class.getResourceAsStream(path))
+                .orElseGet(() -> ResourceUtils.class.getResourceAsStream("/" + path)));
     }
 
     public static Optional<String> getFileAsString(@NotNull String path) {

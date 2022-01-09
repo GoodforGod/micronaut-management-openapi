@@ -27,6 +27,7 @@ public class YamlMerger {
      * @param resources YAML resources to merge
      * @return merged yaml in one map
      */
+    @NotNull
     public Map<Object, Object> merge(Collection<Resource> resources) {
         if (CollectionUtils.isEmpty(resources))
             return Collections.emptyMap();

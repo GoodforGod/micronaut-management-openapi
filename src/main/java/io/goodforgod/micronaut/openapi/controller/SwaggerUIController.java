@@ -7,6 +7,7 @@ import io.goodforgod.micronaut.openapi.utils.ResourceUtils;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.annotation.Value;
 import io.micronaut.context.env.DefaultPropertyPlaceholderResolver;
+import io.micronaut.context.env.PropertyPlaceholderResolver;
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
@@ -20,6 +21,7 @@ import io.micronaut.scheduling.TaskExecutors;
 import io.micronaut.scheduling.annotation.ExecuteOn;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.inject.Inject;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -47,14 +49,16 @@ public class SwaggerUIController {
         this.resolvedValue = SupplierUtil.memoized(() -> {
             final String file = ResourceUtils.getFileAsString(SWAGGER_IU_PATH).orElse(StringUtils.EMPTY_STRING);
 
-            final Map<String, Object> map = Map.of(
-                    "serviceName", serviceName,
-                    "openapiPath", openAPIConfig.getPath(),
-                    "swaggerUIPath", swaggerUIConfig.getPath());
+            final Map<String, Object> properties = new HashMap<>(8);
+            properties.put("serviceName", serviceName);
+            properties.put("openapiPath", openAPIConfig.getPath());
+            properties.put("swaggerUIPath", swaggerUIConfig.getPath());
 
-            var propertyResolver = new MapPropertyResolver(map);
-            var placeholderResolver = new DefaultPropertyPlaceholderResolver(propertyResolver, conversionService);
-            return placeholderResolver.resolvePlaceholders(file).get();
+            final MapPropertyResolver resolver = new MapPropertyResolver(properties);
+            final PropertyPlaceholderResolver placeholderResolver = new DefaultPropertyPlaceholderResolver(resolver,
+                    conversionService);
+            return placeholderResolver.resolvePlaceholders(file)
+                    .orElseThrow(() -> new IllegalStateException("No Resolved Swagger UI found"));
         });
     }
 

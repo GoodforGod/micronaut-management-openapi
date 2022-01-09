@@ -10,10 +10,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +49,7 @@ class OpenAPIProviderTests extends Assertions {
 
     @Test
     void isServicePresent() {
-        final Resource resource = loader.getAny().orElseThrow();
+        final Resource resource = loader.getAny().get();
         assertNotNull(resource);
         assertNotNull(resource.toString());
         assertNotEquals(0, resource.hashCode());
@@ -60,7 +57,7 @@ class OpenAPIProviderTests extends Assertions {
 
     @Test
     void isNonMergedPresent() {
-        final Resource resource = loader.getMerged().orElseThrow();
+        final Resource resource = loader.getMerged().get();
         assertNotNull(resource);
         assertNotNull(resource.toString());
         assertNotEquals(0, resource.hashCode());
@@ -68,19 +65,19 @@ class OpenAPIProviderTests extends Assertions {
 
     @Test
     void isServiceYamlPresentAsMerged() {
-        final Resource resource = loader.getMerged().orElseThrow();
+        final Resource resource = loader.getMerged().get();
         assertNotNull(resource);
 
-        final Resource resourceCached = loader.getMerged().orElseThrow();
+        final Resource resourceCached = loader.getMerged().get();
         assertNotNull(resourceCached);
         assertEquals(resource, resourceCached);
     }
 
     @Test
     void getMergedAndCachedMerged() throws URISyntaxException {
-        final List<Resource> resources = List.of(
-                URIResource.of(new URI("mock/test-1.yml")),
-                URIResource.of(new URI("META-INF/swagger/swagger.yml")));
+        final List<Resource> resources = new ArrayList<>();
+        resources.add(URIResource.of(new URI("mock/test-1.yml")));
+        resources.add(URIResource.of(new URI("META-INF/swagger/swagger.yml")));
 
         final OpenAPIProvider openAPIProvider = new OpenAPIProvider(config, merger) {
 
@@ -90,10 +87,10 @@ class OpenAPIProviderTests extends Assertions {
             }
         };
 
-        final Resource resource = openAPIProvider.getMerged().orElseThrow();
+        final Resource resource = openAPIProvider.getMerged().get();
         assertNotNull(resource);
 
-        final Resource resourceCached = openAPIProvider.getMerged().orElseThrow();
+        final Resource resourceCached = openAPIProvider.getMerged().get();
         assertNotNull(resourceCached);
         assertEquals(resource, resourceCached);
     }
@@ -109,7 +106,7 @@ class OpenAPIProviderTests extends Assertions {
         };
 
         final Optional<Resource> resource = openAPIProvider.getMerged();
-        assertTrue(resource.isEmpty());
+        assertFalse(resource.isPresent());
     }
 
     @Test
