@@ -19,7 +19,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 micronaut {
-    version("3.2.3")
+    version("3.2.4")
     processing {
         incremental(true)
         module(project.name)
@@ -45,7 +45,7 @@ dependencies {
     testCompileOnly "io.swagger.core.v3:swagger-annotations"
 
     testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
-    testRuntimeOnly "ch.qos.logback:logback-classic:1.2.9"
+    testRuntimeOnly "ch.qos.logback:logback-classic:1.2.10"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testImplementation "org.junit.jupiter:junit-jupiter-params"

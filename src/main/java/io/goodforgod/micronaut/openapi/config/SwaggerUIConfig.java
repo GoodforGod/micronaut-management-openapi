@@ -21,7 +21,7 @@ public class SwaggerUIConfig {
     }
 
     /**
-     * Path for Swagger-UI exposure
+     * Swagger-UI exposure path
      */
     void setPath(String path) {
         this.path = path;
@@ -32,7 +32,7 @@ public class SwaggerUIConfig {
     }
 
     /**
-     * Enable Swagger-UI exposure {@link SwaggerUIController}
+     * Enables Swagger-UI exposure via {@link SwaggerUIController} controller
      */
     void setEnabled(boolean enabled) {
         this.enabled = enabled;

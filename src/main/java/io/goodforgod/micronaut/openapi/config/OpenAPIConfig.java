@@ -31,7 +31,7 @@ public class OpenAPIConfig {
     }
 
     /**
-     * Enables {@link OpenAPIController} controller
+     * Enables OpenAPI exposure via {@link OpenAPIController} controller
      */
     void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -42,7 +42,7 @@ public class OpenAPIConfig {
     }
 
     /**
-     * Allow merging multiple OpenAPI files into one
+     * Enabled multiple OpenAPI files merging into one when exposed
      */
     void setMerge(boolean merge) {
         this.merge = merge;
@@ -53,7 +53,7 @@ public class OpenAPIConfig {
     }
 
     /**
-     * Allow change {@link OpenAPIController} controller path
+     * Changes OpenAPI exposure path via {@link OpenAPIController}
      */
     void setPath(String path) {
         this.path = path;
@@ -79,7 +79,7 @@ public class OpenAPIConfig {
     }
 
     /**
-     * Exclude listed OpenAPI files (if {@link #include} is not specified)
+     * Exclude listed OpenAPI files from merging (if {@link #include} is not specified)
      */
     void setExclude(List<String> exclude) {
         this.exclude = new HashSet<>(exclude);
@@ -92,7 +92,7 @@ public class OpenAPIConfig {
     }
 
     /**
-     * Include only listed OpenAPI files (ignores {@link #exclude})
+     * Include only listed OpenAPI files for exposure (ignores {@link #exclude})
      */
     void setInclude(List<String> include) {
         this.include = new HashSet<>(include);

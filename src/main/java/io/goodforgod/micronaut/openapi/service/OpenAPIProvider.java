@@ -48,6 +48,7 @@ public class OpenAPIProvider {
     /**
      * @return current service resource
      */
+    @NotNull
     public Optional<Resource> getAny() {
         return getAll().stream().findFirst();
     }
@@ -55,6 +56,7 @@ public class OpenAPIProvider {
     /**
      * @return merged OpenAPI
      */
+    @NotNull
     public Optional<Resource> getMerged() {
         if (merged != null) {
             return Optional.of(merged);
@@ -125,6 +127,7 @@ public class OpenAPIProvider {
     /**
      * @return get all OpenAPI files as resources
      */
+    @NotNull
     public Collection<Resource> getAll() {
         if (cachedResources != null) {
             return cachedResources;

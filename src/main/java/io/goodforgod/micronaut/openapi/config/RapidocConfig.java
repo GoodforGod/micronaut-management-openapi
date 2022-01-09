@@ -21,7 +21,7 @@ public class RapidocConfig {
     }
 
     /**
-     * Path for Rapidoc exposure
+     * Rapidoc exposure path
      */
     void setPath(String path) {
         this.path = path;
@@ -32,7 +32,7 @@ public class RapidocConfig {
     }
 
     /**
-     * Enable Rapidoc exposure {@link RapidocController}
+     * Enables Rapidoc exposure via {@link RapidocController} controller
      */
     void setEnabled(boolean enabled) {
         this.enabled = enabled;

@@ -35,6 +35,7 @@ public final class ResourceUtils {
      * @param path under which to look for resources
      * @return resources under given path
      */
+    @NotNull
     public static List<PathResource> getResources(@NotNull String path) {
         return getResources(path, p -> true);
     }
@@ -44,6 +45,7 @@ public final class ResourceUtils {
      * @param pathPredicate predicate to validate paths
      * @return resources under given path
      */
+    @NotNull
     public static List<PathResource> getResources(@NotNull String path,
                                                   @NotNull Predicate<String> pathPredicate) {
         logger.debug("Looking for files inside JAR with path: {}", path);
