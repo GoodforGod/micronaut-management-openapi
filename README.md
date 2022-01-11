@@ -40,17 +40,19 @@ dependencies {
 ## Example
 
 Here is [simple Micronaut HTTP application](https://github.com/GoodforGod/micronaut-java-http-template)
-with configured library and OpenAPI generator, you can clone and play with it.
+with configured library and OpenAPI, you play with it.
 
 ## OpenAPI Generation
 
-Library only exposes *OpenAPI* files, library **DOESN'T** generate them, so this is your responsibility to generate OpenAPI file.
+Library only exposes *OpenAPI*, library **DOESN'T** generate it, this is your responsibility to generate OpenAPI files.
 
-There is Micronaut OpenAPI generator, [Gradle config](https://github.com/GoodforGod/micronaut-java-http-template/blob/master/build.gradle#L35):
+There is Micronaut OpenAPI generator, [Gradle config](https://github.com/GoodforGod/micronaut-http-template/blob/master/build.gradle#L40):
 
 ```yaml
-annotationProcessor("io.micronaut.openapi:micronaut-openapi:3.2.2")
-compileOnly("io.swagger.core.v3:swagger-annotations:2.1.11")
+dependencies {
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi:3.2.4")
+    compileOnly("io.swagger.core.v3:swagger-annotations:2.1.11")
+}
 ```
 
 More info about Micronaut OpenAPI generator [in official documentation](https://micronaut-projects.github.io/micronaut-openapi/latest/guide/index.html).
@@ -106,12 +108,7 @@ micronaut:
   security:
     intercept-url-map:
       -
-        pattern: /openapi
-        http-method: GET
-        access:
-          - isAnonymous()
-      -
-        pattern: /swagger-ui
+        pattern: /openapi|/swagger-ui
         http-method: GET
         access:
           - isAnonymous()
