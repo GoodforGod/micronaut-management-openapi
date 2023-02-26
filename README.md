@@ -24,7 +24,7 @@ Library ships for *Micronaut 3*.
 **Gradle**
 ```groovy
 dependencies {
-    implementation "io.goodforgod:micronaut-management-openapi:1.0.2"
+    implementation "io.goodforgod:micronaut-management-openapi:1.0.4"
 }
 ```
 
@@ -33,7 +33,7 @@ dependencies {
 <dependency>
     <groupId>io.goodforgod</groupId>
     <artifactId>micronaut-management-openapi</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
@@ -50,8 +50,8 @@ There is Micronaut OpenAPI generator, [Gradle config](https://github.com/Goodfor
 
 ```yaml
 dependencies {
-    annotationProcessor("io.micronaut.openapi:micronaut-openapi:3.2.4")
-    compileOnly("io.swagger.core.v3:swagger-annotations:2.1.11")
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi:4.8.4")
+    compileOnly("io.swagger.core.v3:swagger-annotations:2.2.8")
 }
 ```
 

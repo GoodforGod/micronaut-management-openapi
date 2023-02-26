@@ -3,8 +3,8 @@ plugins {
     id "maven-publish"
 
     id "org.sonarqube" version "3.3"
-    id "com.diffplug.spotless" version "6.1.0"
-    id "io.micronaut.library" version "3.1.1"
+    id "com.diffplug.spotless" version "6.12.0"
+    id "io.micronaut.library" version "3.7.2"
 }
 
 repositories {
@@ -19,7 +19,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 micronaut {
-    version("3.2.4")
+    version("3.8.5")
     processing {
         incremental(true)
         module(project.name)
@@ -34,7 +34,7 @@ dependencies {
     compileOnly "io.swagger.core.v3:swagger-annotations"
     compileOnly "io.micronaut:micronaut-http-server"
 
-    implementation "org.jetbrains:annotations:22.0.0"
+    implementation "org.jetbrains:annotations:23.0.0"
 
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testAnnotationProcessor "io.micronaut.openapi:micronaut-openapi"
