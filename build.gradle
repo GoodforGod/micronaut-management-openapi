@@ -43,6 +43,7 @@ dependencies {
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
     testAnnotationProcessor "io.micronaut.openapi:micronaut-openapi"
 
+    testImplementation "io.micronaut:micronaut-jackson-databind"
     testImplementation "io.micronaut:micronaut-http-client"
     testImplementation "io.micronaut.test:micronaut-test-core"
     testImplementation "io.micronaut.test:micronaut-test-junit5"

@@ -29,7 +29,7 @@ implementation "io.goodforgod:micronaut-management-openapi:2.0.0"
 <dependency>
     <groupId>io.goodforgod</groupId>
     <artifactId>micronaut-management-openapi</artifactId>
-    <version>1.0.3</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
