@@ -60,19 +60,19 @@ public class OpenAPIController {
                 ? openAPIProvider.getMerged()
                 : openAPIProvider.getAny();
 
-        if (!openapi.isPresent()) {
+        if (openapi.isEmpty()) {
             throw new HttpStatusException(HttpStatus.NOT_FOUND, "Can't find OpenAPI file");
-        } else if (openapi.get() instanceof FileResource) {
-            final File file = ((FileResource) openapi.get()).getFile();
+        } else if (openapi.get()instanceof FileResource fr) {
+            final File file = fr.getFile();
             logger.debug("Streaming file with path: {}", file);
             return new SystemFile(file, MEDIA_TYPE);
         } else {
             final InputStream inputStream = openapi.get().getStream();
             if (inputStream != null) {
                 return new StreamedFile(inputStream, MEDIA_TYPE);
-            } else if (openapi.get() instanceof PathResource) {
+            } else if (openapi.get()instanceof PathResource pr) {
                 throw new HttpStatusException(HttpStatus.NOT_IMPLEMENTED,
-                        "Can't read OpenAPI file: " + ((PathResource) openapi.get()).getPath());
+                        "Can't read OpenAPI file: " + pr.getPath());
             } else {
                 throw new HttpStatusException(HttpStatus.NOT_IMPLEMENTED, "Can't read OpenAPI file cause it was empty");
             }

@@ -1,6 +1,8 @@
 # Micronaut Management OpenAPI
 
-![Java CI](https://github.com/GoodforGod/micronaut-management-openapi/workflows/Java%20CI/badge.svg)
+[![Minimum required Java version](https://img.shields.io/badge/Java-17%2B-blue?logo=openjdk)](https://openjdk.org/projects/jdk/17/)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.goodforgod/micronaut-management-openapi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.goodforgod/micronaut-management-openapi)
+![Java CI](https://github.com/GoodforGod/micronaut-management-openapi/workflows/Master%20CI/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-management-openapi)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=coverage)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-management-openapi)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-management-openapi)
@@ -15,17 +17,11 @@ Features:
 - *Swagger UI Dark\Light theme*
 - Rapidoc exposure endpoint
 
-<img src="https://s10.gifyu.com/images/optimized-swagger.gif" width="800"/>
-
 ## Dependency :rocket:
-
-Library ships for *Micronaut 3*.
 
 **Gradle**
 ```groovy
-dependencies {
-    implementation "io.goodforgod:micronaut-management-openapi:1.0.3"
-}
+implementation "io.goodforgod:micronaut-management-openapi:2.0.0"
 ```
 
 **Maven**
@@ -33,7 +29,7 @@ dependencies {
 <dependency>
     <groupId>io.goodforgod</groupId>
     <artifactId>micronaut-management-openapi</artifactId>
-    <version>1.0.3</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -50,8 +46,8 @@ There is Micronaut OpenAPI generator, [Gradle config](https://github.com/Goodfor
 
 ```yaml
 dependencies {
-    annotationProcessor("io.micronaut.openapi:micronaut-openapi:4.8.4")
-    compileOnly("io.swagger.core.v3:swagger-annotations:2.2.8")
+    annotationProcessor("io.micronaut.openapi:micronaut-openapi")
+    compileOnly("io.swagger.core.v3:swagger-annotations:2.2.15")
 }
 ```
 
@@ -113,6 +109,13 @@ micronaut:
         access:
           - isAnonymous()
 ```
+
+
+## Micronaut Compatability
+
+Starting from version *2.0.0* library ships for *Micronaut 4* & Java 17 is required.
+
+Starting from version *1.0.0* library ships for *Micronaut 3* & Java 1.8+ is required.
 
 ## License
 
