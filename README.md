@@ -2,7 +2,7 @@
 
 [![Minimum required Java version](https://img.shields.io/badge/Java-17%2B-blue?logo=openjdk)](https://openjdk.org/projects/jdk/17/)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.goodforgod/micronaut-management-openapi/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.goodforgod/micronaut-management-openapi)
-![Java CI](https://github.com/GoodforGod/micronaut-management-openapi/workflows/Master%20CI/badge.svg)
+![Java CI](https://github.com/GoodforGod/micronaut-management-openapi/workflows/CI%20Master/badge.svg)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=alert_status)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-management-openapi)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=coverage)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-management-openapi)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=GoodforGod_micronaut-management-openapi&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=GoodforGod_micronaut-management-openapi)
